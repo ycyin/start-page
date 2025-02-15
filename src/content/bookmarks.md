@@ -41,4 +41,28 @@ links:
     title: X
     src: x.svg
     alt: x-icon
+  - href: https://chat.deepseek.com/
+    title: DeepSeek
+    src: deepseek.svg
+    alt: deepseek-icon
+  - href: https://github.com/ahmetdem
+    title: Github
+    src: github.svg
+    alt: github-icon
+  - href: https://mangadex.org/
+    title: MangaDex
+    src: mangadex.svg
+    alt: mangadex-icon
+  - href: https://aniwave.lv/
+    title: AniWave
+    src: aniwave.svg
+    alt: aniwave-icon
+  - href: https://www.deepl.com/en/translator
+    title: DeepL
+    src: deepl.svg
+    alt: deepl-icon
+  - href: https://chatgpt.com/
+    title: ChatGpt
+    src: chatgpt.svg
+    alt: chatgpt-icon
 ---
