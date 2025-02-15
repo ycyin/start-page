@@ -9,7 +9,7 @@ const { title, links } = (await Astro.glob("../content/bookmarks.md"))[0].frontm
       <li>
         <a href={link.href}>
           <img class="svg-icon" src={link.src} alt={link.alt} />
-          {link.title}
+          <span>{link.title}</span>
         </a>
       </li>
     ))}
@@ -49,8 +49,8 @@ const { title, links } = (await Astro.glob("../content/bookmarks.md"))[0].frontm
     color: var(--text-color);
     text-decoration: none;
     display: flex;
-    flex-direction: column;
-    justify-content: center;
+    flex-direction: row; /* Align icon and text horizontally */
+    justify-content: flex-start;
     align-items: center;
     gap: 10px;
     padding: 15px;
@@ -66,6 +66,10 @@ const { title, links } = (await Astro.glob("../content/bookmarks.md"))[0].frontm
   ul li a img {
     max-width: 24px;
     max-height: 24px;
+  }
+
+  ul li a span {
+    white-space: nowrap; /* Prevent text from wrapping */
   }
 
   .svg-icon {
