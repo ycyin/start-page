@@ -38,7 +38,7 @@ links:
     src: reddit.svg
     alt: reddit-icon
   - href: https://x.com/home
-    title: X
+    title: Twitter
     src: x.svg
     alt: x-icon
   - href: https://chat.deepseek.com/
