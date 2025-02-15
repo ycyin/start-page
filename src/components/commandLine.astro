@@ -85,7 +85,7 @@ const name = "ahmetdem";
     "you can search reddit by starting your search with r:",
     "you can search stack overflow by starting your search with s:",
     "input 'help' for more info",
-    "Bunu okuyan gaydır."
+    "Bunu okuyan gaydır.",
   ];
 
   const randomIndex = Math.floor(Math.random() * examples.length);
@@ -142,6 +142,9 @@ const name = "ahmetdem";
         window.location.href =
           "https://google.com/search?q=site:myanimelist.net " +
           value.replace("m:", "");
+      } else if (value.startsWith("gay hakan")) {
+        window.location.href =
+          "https://myanimelist.net/profile/Asteria";
       } else {
         let words = value.split(".");
         if (words.length >= 2) {

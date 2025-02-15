@@ -18,7 +18,7 @@ links:
     src: drive.svg
     alt: drive-icon
   - href: https://myanimelist.net/
-    title: Gay Hakan
+    title: Myanimelist
     src: myanimelist.svg
     alt: myanimelist-icon
   - href: https://discord.com/app
@@ -38,7 +38,7 @@ links:
     src: reddit.svg
     alt: reddit-icon
   - href: https://x.com/home
-    title: Twitter
+    title: X
     src: x.svg
     alt: x-icon
   - href: https://chat.deepseek.com/
