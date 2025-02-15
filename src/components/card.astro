@@ -21,7 +21,7 @@ const { title, links } = (await Astro.glob("../content/bookmarks.md"))[0].frontm
     background-color: var(--card-background-color);
     border-radius: var(--border-radius);
     width: 100%;
-    max-width: 800px; /* Adjust as needed */
+    max-width: 1200px; /* Adjust as needed */
     padding: 20px;
     margin: 0 auto;
   }
@@ -36,7 +36,7 @@ const { title, links } = (await Astro.glob("../content/bookmarks.md"))[0].frontm
   ul {
     list-style-type: none;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(5, 1fr); /* 5 bookmarks per row */
     gap: 20px;
     padding: 0;
   }
@@ -49,11 +49,11 @@ const { title, links } = (await Astro.glob("../content/bookmarks.md"))[0].frontm
     color: var(--text-color);
     text-decoration: none;
     display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
+    flex-direction: column;
+    justify-content: center;
     align-items: center;
     gap: 10px;
-    padding: 10px;
+    padding: 15px;
     border-radius: var(--border-radius);
     background-color: var(--card-item-background-color);
     transition: background-color 0.3s ease;
@@ -75,6 +75,25 @@ const { title, links } = (await Astro.glob("../content/bookmarks.md"))[0].frontm
   @media (prefers-color-scheme: dark) {
     .svg-icon {
       filter: invert(100%);
+    }
+  }
+
+  /* Responsive adjustments */
+  @media only screen and (max-width: 1200px) {
+    ul {
+      grid-template-columns: repeat(3, 1fr); /* 3 bookmarks per row on smaller screens */
+    }
+  }
+
+  @media only screen and (max-width: 768px) {
+    ul {
+      grid-template-columns: repeat(2, 1fr); /* 2 bookmarks per row on mobile */
+    }
+  }
+
+  @media only screen and (max-width: 480px) {
+    ul {
+      grid-template-columns: repeat(1, 1fr); /* 1 bookmark per row on very small screens */
     }
   }
 </style>
