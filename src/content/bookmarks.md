@@ -34,13 +34,13 @@ links:
 	src: whatsapp.svg
 	alt: whatsapp-icon
   - href: https://www.reddit.com/
-  - title: reddit
-  - src: reddit.svg
-  - alt: reddit-icon
+    title: reddit
+    src: reddit.svg
+    alt: reddit-icon
   - href: https://x.com/home
-  - title: X
-  - src: x.svg
-  - alt: x-icon
+    title: X
+    src: x.svg
+    alt: x-icon
 
 
 ---
