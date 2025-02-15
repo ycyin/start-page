@@ -178,6 +178,23 @@ const name = "ahmetdem";
     }
   }
 
+  function simulateTyping(text, delay = 100) {
+    let index = 0;
+    const typingInterval = setInterval(() => {
+      if (index < text.length) {
+        input.value += text[index];
+        index++;
+        // Trigger input event to update any related functionality
+        const event = new Event("input", { bubbles: true });
+        input.dispatchEvent(event);
+      } else {
+        clearInterval(typingInterval);
+      }
+    }, delay);
+  }
+
+  setTimeout(() => simulateTyping(examples[randomIndex]), 1000);
+
   document.addEventListener("keydown", function (event) {
     if (event.keyCode === 27) {
       exitTable();
