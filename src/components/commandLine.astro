@@ -93,6 +93,11 @@ const name = "ahmetdem";
   // Automatically focus the input when the page loads
   input.focus();
 
+  // Focus the input when any key is pressed
+  document.addEventListener("keydown", function () {
+    input.focus();
+  });
+
   input.addEventListener("keydown", function (event) {
     let value = input.value.toLowerCase();
     let elements = document.querySelectorAll("a");
