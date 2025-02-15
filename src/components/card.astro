@@ -58,20 +58,6 @@ const { links } = (await Astro.glob("../content/bookmarks.md"))[0].frontmatter;
       ))}
     </ul>
   </div>
-
-  <!-- Section 5 -->
-  <div class="bookmark-section">
-    <ul>
-      {links.slice(20).map((link) => ( <!-- Remaining bookmarks -->
-        <li>
-          <a href={link.href}>
-            <img class="svg-icon" src={link.src} alt={link.alt} />
-            <span>{link.title}</span>
-          </a>
-        </li>
-      ))}
-    </ul>
-  </div>
 </section>
 
 <style>
