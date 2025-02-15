@@ -78,6 +78,7 @@ const { links } = (await Astro.glob("../content/bookmarks.md"))[0].frontmatter;
   .bookmark-sections {
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
     gap: 20px; /* Space between sections */
     width: 100%;
     max-width: 1200px; /* Adjust as needed */
@@ -89,12 +90,14 @@ const { links } = (await Astro.glob("../content/bookmarks.md"))[0].frontmatter;
     background-color: var(--card-background-color);
     border-radius: var(--border-radius);
     padding: 20px;
+    flex: 1 1 calc(20% - 20px); /* 5 columns with gap */
+    box-sizing: border-box;
   }
 
   ul {
     list-style-type: none;
     display: grid;
-    grid-template-columns: repeat(5, 1fr); /* 5 bookmarks per row */
+    grid-template-columns: 1fr; /* Single column per section */
     gap: 10px; /* Space between bookmarks */
     padding: 0;
   }
@@ -142,20 +145,20 @@ const { links } = (await Astro.glob("../content/bookmarks.md"))[0].frontmatter;
 
   /* Responsive adjustments */
   @media only screen and (max-width: 1200px) {
-    ul {
-      grid-template-columns: repeat(3, 1fr); /* 3 bookmarks per row on smaller screens */
+    .bookmark-section {
+      flex: 1 1 calc(33.33% - 20px); /* 3 columns on smaller screens */
     }
   }
 
   @media only screen and (max-width: 768px) {
-    ul {
-      grid-template-columns: repeat(2, 1fr); /* 2 bookmarks per row on mobile */
+    .bookmark-section {
+      flex: 1 1 calc(50% - 20px); /* 2 columns on mobile */
     }
   }
 
   @media only screen and (max-width: 480px) {
-    ul {
-      grid-template-columns: repeat(1, 1fr); /* 1 bookmark per row on very small screens */
+    .bookmark-section {
+      flex: 1 1 100%; /* 1 column on very small screens */
     }
   }
 </style>
