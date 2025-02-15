@@ -1,47 +1,69 @@
 ---
 const cards = await Astro.glob("../content/*.md");
+const { title } = Astro.props; // Receive the title as a prop
 ---
 
-{
-  cards.map((card) => (
-    <section>
-      <h2>{card.frontmatter.title}</h2>
-      <ul>
-        {card.frontmatter.links.map((link) => (
-          <li>
-            <a href={link.href}>
-              <img class="svg-icon" src={link.src} alt={link.alt} />
-              {link.title}
-            </a>
-          </li>
-        ))}
-      </ul>
-    </section>
-  ))
-}
+<section>
+  <h2>{title}</h2> <!-- Use the title prop here -->
+  <div class="card-container">
+    {
+      cards.map((card) => (
+        <div class="card">
+          <ul>
+            {card.frontmatter.links.map((link) => (
+              <li>
+                <a href={link.href}>
+                  <img class="svg-icon" src={link.src} alt={link.alt} />
+                  {link.title}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))
+    }
+  </div>
+</section>
 
 <style>
   section {
     background-color: var(--card-background-color);
     border-radius: var(--border-radius);
-    width: 170px;
-    padding: 20px 20px;
+    width: 100%;
+    padding: 20px;
     display: flex;
     flex-direction: column;
-    gap: 35px;
-    height: fit-content;
+    gap: 20px;
   }
 
   h2 {
     font-weight: bold;
     font-size: 25px;
+    text-align: center;
+  }
+
+  .card-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+  }
+
+  .card {
+    background-color: var(--card-background-color);
+    border-radius: var(--border-radius);
+    padding: 20px;
+    width: 170px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
   }
 
   ul {
     list-style-type: none;
     display: flex;
     flex-direction: column;
-    gap: 25px;
+    gap: 15px;
   }
 
   ul li {
