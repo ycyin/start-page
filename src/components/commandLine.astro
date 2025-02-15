@@ -86,9 +86,11 @@ const name = "ahmetdem";
     "you can search stack overflow by starting your search with s:",
     "input 'help' for more info",
   ];
+
   const randomIndex = Math.floor(Math.random() * examples.length);
   input.placeholder = examples[randomIndex];
 
+  // Automatically focus the input when the page loads
   input.focus();
 
   input.addEventListener("keydown", function (event) {
@@ -167,7 +169,7 @@ const name = "ahmetdem";
     document.getElementById("overlay").classList.remove("active");
     const input = document.getElementById("terminal-input");
     input.value = "";
-    input.focus();
+    input.focus(); // Re-focus the input after closing the help table
 
     const elements = document.querySelectorAll("a");
     for (let i = 0; i < elements.length; i++) {
@@ -187,4 +189,5 @@ const name = "ahmetdem";
   closeTableButton.onclick = function () {
     exitTable();
   };
+
 </script>
