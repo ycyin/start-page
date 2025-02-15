@@ -137,6 +137,10 @@ const name = "ahmetdem";
         window.location.href =
           "https://google.com/search?q=site:stackoverflow.com " +
           value.replace("s:", "");
+      } else if (value.startsWith("m:")) {
+        window.location.href =
+          "https://google.com/search?q=site:myanimelist.net.com " +
+          value.replace("m:", "");
       } else {
         let words = value.split(".");
         if (words.length >= 2) {
@@ -194,5 +198,4 @@ const name = "ahmetdem";
   closeTableButton.onclick = function () {
     exitTable();
   };
-
 </script>
