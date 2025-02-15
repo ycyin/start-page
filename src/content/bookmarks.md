@@ -41,6 +41,4 @@ links:
     title: X
     src: x.svg
     alt: x-icon
-
-
 ---
