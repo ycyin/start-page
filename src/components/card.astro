@@ -90,7 +90,7 @@ const { links } = (await Astro.glob("../content/bookmarks.md"))[0].frontmatter;
     background-color: var(--card-background-color);
     border-radius: var(--border-radius);
     padding: 20px;
-    flex: 1 1 calc(20% - 20px); /* 5 columns with gap */
+    flex: 1 1 calc(18% - 20px); /* Adjusted width for 5 columns with gap */
     box-sizing: border-box;
   }
 
@@ -146,13 +146,13 @@ const { links } = (await Astro.glob("../content/bookmarks.md"))[0].frontmatter;
   /* Responsive adjustments */
   @media only screen and (max-width: 1200px) {
     .bookmark-section {
-      flex: 1 1 calc(33.33% - 20px); /* 3 columns on smaller screens */
+      flex: 1 1 calc(30% - 20px); /* 3 columns on smaller screens */
     }
   }
 
   @media only screen and (max-width: 768px) {
     .bookmark-section {
-      flex: 1 1 calc(50% - 20px); /* 2 columns on mobile */
+      flex: 1 1 calc(48% - 20px); /* 2 columns on mobile */
     }
   }
 
