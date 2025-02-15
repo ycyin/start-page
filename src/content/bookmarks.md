@@ -18,7 +18,7 @@ links:
     src: drive.svg
     alt: drive-icon
   - href: https://myanimelist.net/
-    title: MyAnimeList
+    title: Gay Hakan
     src: myanimelist.svg
     alt: myanimelist-icon
   - href: https://discord.com/app
