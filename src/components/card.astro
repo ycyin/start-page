@@ -3,7 +3,6 @@ const { title, links } = (await Astro.glob("../content/bookmarks.md"))[0].frontm
 ---
 
 <section>
-  <h2>{title}</h2> <!-- Optional: You can remove this if you don't want any title -->
   <ul>
     {links.map((link) => (
       <li>
