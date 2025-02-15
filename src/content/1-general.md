@@ -2,7 +2,7 @@
 title: General
 links:
   - href: https://mail.google.com/
-    title: hellomotherfucker
+    title: Gmail
     src: gmail.svg
     alt: gmail-icon
   - href: https://photos.google.com

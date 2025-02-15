@@ -17,13 +17,12 @@ import Help from "../components/help.astro";
   .cards {
     display: flex;
     flex-direction: row;
-    gap: 100px;
-    width: 1200px;
-    flex-wrap: wrap;
+    gap: 20px; /* Adjust the gap as needed */
+    width: 100%; /* Adjust the width as needed */
+    height: 200px; /* Adjust the height as needed */
     justify-content: center;
-    align-items: flex-start;
+    align-items: center;
   }
-
   .content {
     display: flex;
     flex-direction: column;
@@ -31,7 +30,6 @@ import Help from "../components/help.astro";
     align-items: center;
     gap: 160px;
   }
-
   @media only screen and (max-width: 1200px) {
     .content {
       margin-top: 2em;
@@ -39,9 +37,10 @@ import Help from "../components/help.astro";
     }
     .cards {
       align-items: center;
-      flex-direction: column;
-      gap: 20px;
+      flex-direction: row;
+      gap: 10px; /* Adjust the gap for smaller screens */
       width: auto;
+      height: auto; /* Adjust the height for smaller screens */
     }
   }
 </style>
