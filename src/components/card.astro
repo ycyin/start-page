@@ -1,5 +1,5 @@
 ---
-const { title, links } = (await Astro.glob("../content/bookmarks.md"))[0].frontmatter;
+const { links } = (await Astro.glob("../content/bookmarks.md"))[0].frontmatter;
 ---
 
 <section>
@@ -8,6 +8,7 @@ const { title, links } = (await Astro.glob("../content/bookmarks.md"))[0].frontm
       <li>
         <a href={link.href}>
           <img class="svg-icon" src={link.src} alt={link.alt} />
+          <span>{link.title}</span>
         </a>
       </li>
     ))}
@@ -24,18 +25,11 @@ const { title, links } = (await Astro.glob("../content/bookmarks.md"))[0].frontm
     margin: 0 auto;
   }
 
-  h2 {
-    font-weight: bold;
-    font-size: 25px;
-    text-align: center;
-    margin-bottom: 20px;
-  }
-
   ul {
     list-style-type: none;
     display: grid;
-    grid-template-columns: repeat(5, 1fr); /* 5 bookmarks per row */
-    gap: 20px;
+    grid-template-columns: repeat(5, 1fr); /* 5 columns per row */
+    gap: 10px; /* Space between columns */
     padding: 0;
   }
 
@@ -50,7 +44,7 @@ const { title, links } = (await Astro.glob("../content/bookmarks.md"))[0].frontm
     flex-direction: row; /* Align icon and text horizontally */
     justify-content: flex-start;
     align-items: center;
-    gap: 10px;
+    gap: 10px; /* Space between icon and text */
     padding: 15px;
     border-radius: var(--border-radius);
     background-color: var(--card-item-background-color);
@@ -83,19 +77,22 @@ const { title, links } = (await Astro.glob("../content/bookmarks.md"))[0].frontm
   /* Responsive adjustments */
   @media only screen and (max-width: 1200px) {
     ul {
-      grid-template-columns: repeat(3, 1fr); /* 3 bookmarks per row on smaller screens */
+      grid-template-columns: repeat(3, 1fr); /* 3 columns per row on smaller screens */
+      gap: 10px; /* Consistent gap */
     }
   }
 
   @media only screen and (max-width: 768px) {
     ul {
-      grid-template-columns: repeat(2, 1fr); /* 2 bookmarks per row on mobile */
+      grid-template-columns: repeat(2, 1fr); /* 2 columns per row on mobile */
+      gap: 10px; /* Consistent gap */
     }
   }
 
   @media only screen and (max-width: 480px) {
     ul {
-      grid-template-columns: repeat(1, 1fr); /* 1 bookmark per row on very small screens */
+      grid-template-columns: repeat(1, 1fr); /* 1 column per row on very small screens */
+      gap: 10px; /* Consistent gap */
     }
   }
 </style>
