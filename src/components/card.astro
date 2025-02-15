@@ -79,19 +79,21 @@ const { links } = (await Astro.glob("../content/bookmarks.md"))[0].frontmatter;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    gap: 20px; /* Space between sections */
+    gap: 20px;
     width: 100%;
-    max-width: 1200px; /* Adjust as needed */
+    max-width: 1200px;
     padding: 10px;
     margin: 0 auto;
+    border: 1px solid red; /* Add this to visualize the container */
   }
 
   .bookmark-section {
     background-color: var(--card-background-color);
     border-radius: var(--border-radius);
     padding: 20px;
-    flex: 1 1 calc(20% - 20px); /* Adjusted width for 5 columns with gap */
+    flex: 1 1 calc(20% - 20px);
     box-sizing: border-box;
+    border: 1px solid blue; /* Add this to visualize each section */
   }
 
   ul {
