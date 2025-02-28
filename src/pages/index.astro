@@ -18,8 +18,8 @@ import Help from "../components/help.astro";
   body {
     background: linear-gradient(
       150deg,
-      #006875 0%,
-      #D9E2FF 100%
+      #006875 100%,
+      #D9E2FF 0%
     );
     color: #FFFFFF;
     min-height: 100vh;
@@ -78,7 +78,7 @@ import Help from "../components/help.astro";
 
   .command-line {
     background: rgba(255,255,255,0.9);
-    color: #006875;
+    color: #000000;
     border-radius: 8px;
     padding: 1rem 1.5rem;
     width: min(80vw, 500px);
@@ -118,14 +118,4 @@ import Help from "../components/help.astro";
     }
   }
 
-  /* Scrollbar styling */
-  ::-webkit-scrollbar {
-    width: 8px;
-    background: #004953;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background: #006875;
-    border-radius: 4px;
-  }
 </style>
