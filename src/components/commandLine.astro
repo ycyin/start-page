@@ -3,9 +3,10 @@ const name = "ahmetdem";
 ---
 
 <section>
-  <p>{name}@<span id="browser-info"></span> |</p>
+  <p id="username">{name}@<span id="browser-info"></span> |</p>
   <input id="terminal-input" type="text" />
 </section>
+
 <style>
   section {
     display: flex;
@@ -21,6 +22,10 @@ const name = "ahmetdem";
   p {
     font-family: var(--monospace-font-family);
     font-size: 20px;
+  }
+
+  #username {
+    color: rgb(0, 0, 0); /* Change this to any color you want */
   }
 
   #browser-info {
