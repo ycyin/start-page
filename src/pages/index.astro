@@ -20,16 +20,16 @@ import Help from "../components/help.astro";
     overflow: hidden; /* Disable scrollbars */
   }
 
+  @keyframes gradient {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
   body {
-    background: linear-gradient(
-      150deg,
-      #006875 0%,
-      #D9E2FF 100%
-    );
-    color: #FFFFFF;
-    min-height: 100vh;
-    font-family: system-ui, sans-serif;
-    position: relative;
+    background: linear-gradient(-45deg, #006875, #D9E2FF, #84A9FF);
+    background-size: 400% 400%;
+    animation: gradient 10s ease infinite;
   }
 
   /* Water-like texture overlay */
