@@ -116,61 +116,33 @@ const name = "ahmetdem";
   });
 
   input.addEventListener("keydown", function (event) {
-    let value = input.value.toLowerCase().trim();
+    let value = input.value.toLowerCase();
     let elements = document.querySelectorAll("a");
 
-    // Handle Ctrl + C to clear input and reset styles
+    let matchFound = false;
     if (event.ctrlKey && event.key === "c") {
       input.value = "";
-      elements.forEach((element) => {
+      for (let i = 0; i < elements.length; i++) {
+        let element = elements[i];
         element.style.mixBlendMode = "";
-        element.style.backgroundColor = "";
-        element.style.boxShadow = "";
-        element.style.transform = "scale(1)";
-        element.style.textDecoration = "";
-        element.style.animation = "";
-        element.style.opacity = "1";
-        element.style.border = "";
-        element.style.filter = "";
-      });
-      return;
-    }
-
-    // Only proceed if Enter key is pressed
-    if (event.key !== "Enter") return;
-
-    let matchFound = false;
-
-    for (let element of elements) {
-      let text = element.textContent.toLowerCase();
-
-      // Check if the link text matches input
-      if (text.includes(value.replace(/^r:|^s:|^m:/, ""))) {
-        // Enhanced visual effect for matches
-        element.style.backgroundColor = "rgba(50, 205, 50, 0.25)"; // Light green
-        element.style.border = "2px solid limegreen";
-        element.style.boxShadow = "0 0 10px rgba(50, 205, 50, 0.5)";
-        element.style.fontWeight = "bold";
-        element.style.transform = "scale(1.05)";
-        element.style.zIndex = "10";
-        element.style.position = "relative";
-        element.style.animation = "blink 0.3s step-end infinite alternate";
-
-        // Scroll to the match
-        element.scrollIntoView({ behavior: "smooth", block: "center" });
-
-        // Delay navigation slightly to show effect
-        setTimeout(() => {
-          window.location.href = element.href;
-        }, 400); // Slightly longer delay to notice the effect
-
-        matchFound = true;
-        break; // Stop checking after first match
       }
     }
-
-    // Handle commands or search if no match is found
-    if (!matchFound) {
+    for (let i = 0; i < elements.length; i++) {
+      let element = elements[i];
+      if (value === "" || event.keyCode !== 13) {
+        continue;
+      }
+      if (
+        element.textContent
+          .toLowerCase()
+          .indexOf(value.replace(/^r:|^s:/, "")) !== -1
+      ) {
+        window.location.href = element.href;
+        matchFound = true;
+        break;
+      }
+    }
+    if (!matchFound && event.keyCode === 13) {
       if (value === "help") {
         document.getElementById("help").style.display = "block";
         document.getElementById("overlay").classList.add("active");
@@ -198,16 +170,6 @@ const name = "ahmetdem";
       }
     }
   });
-
-  // Add CSS for blinking effect
-  let style = document.createElement("style");
-  style.innerHTML = `
-  @keyframes blink {
-    0% { text-decoration: underline; }
-    100% { text-decoration: none; }
-  }
-`;
-  document.head.appendChild(style);
 
   input.addEventListener("input", function () {
     let value = input.value.toLowerCase();
