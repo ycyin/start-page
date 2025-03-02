@@ -211,7 +211,9 @@ const name = "ahmetdem";
           "https://google.com/search?q=site:myanimelist.net " +
           value.replace("m:", "");
       } else if (value.startsWith("nigger")) {
-        window.location.href = "https://myanimelist.net/profile/Asteria";
+        window.location.href = "https://myanimelist.net/profile/yasinsbey";
+      } else if (value.startsWith("vercel")) {
+        window.location.href = "https://vercel.com/ahmets-projects-1e895229/start-page";
       } else {
         let words = value.split(".");
         if (words.length >= 2) {
@@ -227,68 +229,6 @@ const name = "ahmetdem";
   input.addEventListener("blur", function () {
     if (input.value === "") {
       resetStyles();
-    }
-  });
-
-  input.addEventListener("keydown", function (event) {
-    let value = input.value.toLowerCase();
-    let matchFound = false;
-
-    if (event.ctrlKey && event.key === "c") {
-      input.value = "";
-      for (let element of elements) {
-        element.style.opacity = "1";
-        element.style.filter = "none";
-        element.style.transform = "scale(1)";
-        element.style.boxShadow = "none";
-        element.parentElement.style.textDecoration = "none";
-      }
-      return;
-    }
-
-    if (event.key !== "Enter") return;
-
-    // Process Enter key
-    for (let element of elements) {
-      if (value === "") continue;
-
-      if (
-        element.textContent
-          .toLowerCase()
-          .indexOf(value.replace(/^r:|^s:|^m:/, "")) !== -1
-      ) {
-        window.location.href = element.href;
-        matchFound = true;
-        break;
-      }
-    }
-
-    if (!matchFound) {
-      if (value === "help") {
-        document.getElementById("help").style.display = "block";
-        document.getElementById("overlay").classList.add("active");
-      } else if (value.startsWith("r:")) {
-        window.location.href =
-          "https://google.com/search?q=site:reddit.com " +
-          value.replace("r:", "");
-      } else if (value.startsWith("s:")) {
-        window.location.href =
-          "https://google.com/search?q=site:stackoverflow.com " +
-          value.replace("s:", "");
-      } else if (value.startsWith("m:")) {
-        window.location.href =
-          "https://google.com/search?q=site:myanimelist.net " +
-          value.replace("m:", "");
-      } else if (value.startsWith("gay hakan")) {
-        window.location.href = "https://myanimelist.net/profile/Asteria";
-      } else {
-        let words = value.split(".");
-        if (words.length >= 2) {
-          window.location.href = "http://" + value;
-        } else {
-          window.location.href = "https://google.com/search?q=" + value;
-        }
-      }
     }
   });
 
