@@ -74,12 +74,13 @@ links.sort((a, b) => a.title.localeCompare(b.title));
   }
 
   .bookmark-section {
-    background-color: var(--card-background-color);
-    border-radius: var(--border-radius);
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     padding: 10px;
     flex: 1 1 calc(20% - 20px);
-    box-sizing: border-box;
-    border: 1px solid black; /* Add this to visualize each section */
+    border: 1px solid black
   }
 
   ul {
