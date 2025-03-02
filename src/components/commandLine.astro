@@ -48,20 +48,6 @@ const name = "ahmetdem";
     outline: none;
   }
 
-  /* Blinking Cursor */
-  #terminal-input::after {
-    content: "|";
-    display: inline-block;
-    margin-left: 5px;
-    animation: blink 0.8s infinite;
-  }
-
-  @keyframes blink {
-    50% {
-      opacity: 0;
-    }
-  }
-
   /* Improve input styling */
   #terminal-input {
     caret-color: white; /* Makes the input cursor visible */
