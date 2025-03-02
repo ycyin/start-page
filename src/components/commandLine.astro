@@ -48,6 +48,26 @@ const name = "ahmetdem";
     outline: none;
   }
 
+  /* Blinking Cursor */
+  #terminal-input::after {
+    content: "|";
+    display: inline-block;
+    margin-left: 5px;
+    animation: blink 0.8s infinite;
+  }
+
+  @keyframes blink {
+    50% {
+      opacity: 0;
+    }
+  }
+
+  /* Improve input styling */
+  #terminal-input {
+    caret-color: white; /* Makes the input cursor visible */
+    font-weight: bold;
+  }
+
   @media only screen and (max-width: 1200px) {
     section {
       flex-direction: column;
@@ -76,26 +96,36 @@ const name = "ahmetdem";
 
   const input = document.getElementById("terminal-input");
   const examples = [
-    "how to tie a tie",
+    "how to tie a tie?",
     "today's weather",
-    "is it halloween yet",
-    "what's my age again",
+    "search on reddit with r:query",
+    "search stackoverflow with s:query",
     "make the terminal great again",
-    "we'll make our terminal... with blackjack and hookers!",
     "hey sexy! wanna kill all humans?",
-    "another pointless day where I accomplish nothing",
-    "did everything just taste purple for a second?",
-    "at the risk of sounding positive, you can do this!",
-    "you look good today!",
-    "press ctrl+c to clear the terminal",
-    "you can search reddit by starting your search with r:",
-    "you can search stack overflow by starting your search with s:",
-    "input 'help' for more info",
+    "press ctrl+c to clear",
     "Bunu okuyan gaydır.",
   ];
 
-  const randomIndex = Math.floor(Math.random() * examples.length);
-  input.placeholder = examples[randomIndex];
+  let exampleIndex = 0;
+  let charIndex = 0;
+  let typingSpeed = 100; // Speed of typing effect
+
+  function typePlaceholder() {
+    if (charIndex < examples[exampleIndex].length) {
+      input.placeholder += examples[exampleIndex].charAt(charIndex);
+      charIndex++;
+      setTimeout(typePlaceholder, typingSpeed);
+    } else {
+      setTimeout(() => {
+        input.placeholder = "";
+        charIndex = 0;
+        exampleIndex = (exampleIndex + 1) % examples.length;
+        typePlaceholder();
+      }, 2000);
+    }
+  }
+
+  typePlaceholder();
 
   // Automatically focus the input when the page loads
   input.focus();
@@ -149,8 +179,7 @@ const name = "ahmetdem";
           "https://google.com/search?q=site:myanimelist.net " +
           value.replace("m:", "");
       } else if (value.startsWith("gay hakan")) {
-        window.location.href =
-          "https://myanimelist.net/profile/Asteria";
+        window.location.href = "https://myanimelist.net/profile/Asteria";
       } else {
         let words = value.split(".");
         if (words.length >= 2) {
@@ -177,6 +206,34 @@ const name = "ahmetdem";
         element.style.mixBlendMode = "";
       } else {
         element.style.mixBlendMode = "color-burn";
+      }
+    }
+  });
+
+  let commandHistory = [];
+  let historyIndex = -1;
+
+  input.addEventListener("keydown", function (event) {
+    if (event.key === "ArrowUp") {
+      if (historyIndex > 0) {
+        historyIndex--;
+        input.value = commandHistory[historyIndex];
+      }
+      event.preventDefault();
+    } else if (event.key === "ArrowDown") {
+      if (historyIndex < commandHistory.length - 1) {
+        historyIndex++;
+        input.value = commandHistory[historyIndex];
+      } else {
+        input.value = "";
+        historyIndex = commandHistory.length;
+      }
+      event.preventDefault();
+    } else if (event.key === "Enter") {
+      let command = input.value.trim();
+      if (command !== "") {
+        commandHistory.push(command);
+        historyIndex = commandHistory.length;
       }
     }
   });
