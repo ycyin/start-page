@@ -116,33 +116,49 @@ const name = "ahmetdem";
   });
 
   input.addEventListener("keydown", function (event) {
-    let value = input.value.toLowerCase();
+    let value = input.value.toLowerCase().trim();
     let elements = document.querySelectorAll("a");
 
-    let matchFound = false;
+    // Handle Ctrl + C to clear input and reset styles
     if (event.ctrlKey && event.key === "c") {
       input.value = "";
-      for (let i = 0; i < elements.length; i++) {
-        let element = elements[i];
+      elements.forEach((element) => {
         element.style.mixBlendMode = "";
-      }
+        element.style.backgroundColor = "";
+        element.style.boxShadow = "";
+        element.style.transform = "scale(1)";
+      });
+      return;
     }
-    for (let i = 0; i < elements.length; i++) {
-      let element = elements[i];
-      if (value === "" || event.keyCode !== 13) {
-        continue;
-      }
-      if (
-        element.textContent
-          .toLowerCase()
-          .indexOf(value.replace(/^r:|^s:/, "")) !== -1
-      ) {
-        window.location.href = element.href;
+
+    // Only proceed if Enter key is pressed
+    if (event.key !== "Enter") return;
+
+    let matchFound = false;
+
+    for (let element of elements) {
+      let text = element.textContent.toLowerCase();
+
+      // Check if the link text matches input
+      if (text.includes(value.replace(/^r:|^s:/, ""))) {
+        // Highlight the matched element before navigation
+        element.style.backgroundColor = "rgba(255, 255, 0, 0.5)"; // Yellow highlight
+        element.style.boxShadow = "0 0 10px rgba(255, 255, 0, 0.8)";
+        element.style.transform = "scale(1.05)";
+        element.scrollIntoView({ behavior: "smooth", block: "center" });
+
+        // Delay navigation slightly to show effect
+        setTimeout(() => {
+          window.location.href = element.href;
+        }, 200);
+
         matchFound = true;
-        break;
+        break; // Stop checking after first match
       }
     }
-    if (!matchFound && event.keyCode === 13) {
+
+    // Handle commands or search if no match is found
+    if (!matchFound) {
       if (value === "help") {
         document.getElementById("help").style.display = "block";
         document.getElementById("overlay").classList.add("active");
