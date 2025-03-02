@@ -34,7 +34,7 @@ links:
     src: whatsapp.svg
     alt: whatsapp-icon
   - href: https://www.reddit.com/
-    title: reddit
+    title: Reddit
     src: reddit.svg
     alt: reddit-icon
   - href: https://x.com/home
