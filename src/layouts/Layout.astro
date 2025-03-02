@@ -42,14 +42,6 @@ const { title } = Astro.props;
     --monospace-font-family: "Source Code Pro", monospace;
   }
 
-  @media (prefers-color-scheme: dark) {
-    :root[color-mode="user"] {
-      --background-color: #212529;
-      --text-color: #f8f9fa;
-      --card-background-color: #343a40;
-      --greyed-out-text-color: #212529;
-    }
-  }
   html {
     font-family: var(--font-family);
   }
