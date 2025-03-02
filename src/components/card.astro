@@ -132,11 +132,22 @@ links.sort((a, b) => a.title.localeCompare(b.title));
     }
   }
 
-  @media (max-width: 600px) {
-    .bookmark-sections {
-      flex-direction: column;
-      gap: 10px;
+  /* Responsive adjustments */
+  @media only screen and (max-width: 1200px) {
+    .bookmark-section {
+      flex: 1 1 calc(30% - 20px); /* 3 columns on smaller screens */
     }
   }
 
+  @media only screen and (max-width: 768px) {
+    .bookmark-section {
+      flex: 1 1 calc(48% - 20px); /* 2 columns on mobile */
+    }
+  }
+
+  @media only screen and (max-width: 480px) {
+    .bookmark-section {
+      flex: 1 1 100%; /* 1 column on very small screens */
+    }
+  }
 </style>
