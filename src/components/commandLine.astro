@@ -127,6 +127,8 @@ const name = "ahmetdem";
         element.style.backgroundColor = "";
         element.style.boxShadow = "";
         element.style.transform = "scale(1)";
+        element.style.textDecoration = "";
+        element.style.animation = "";
       });
       return;
     }
@@ -141,16 +143,15 @@ const name = "ahmetdem";
 
       // Check if the link text matches input
       if (text.includes(value.replace(/^r:|^s:/, ""))) {
-        // Highlight the matched element before navigation
-        element.style.backgroundColor = "rgba(255, 255, 0, 0.5)"; // Yellow highlight
-        element.style.boxShadow = "0 0 10px rgba(255, 255, 0, 0.8)";
-        element.style.transform = "scale(1.05)";
+        // Add a blinking underline effect
+        element.style.textDecoration = "underline";
+        element.style.animation = "blink 0.3s step-end infinite alternate";
         element.scrollIntoView({ behavior: "smooth", block: "center" });
 
         // Delay navigation slightly to show effect
         setTimeout(() => {
           window.location.href = element.href;
-        }, 200);
+        }, 300);
 
         matchFound = true;
         break; // Stop checking after first match
@@ -186,6 +187,16 @@ const name = "ahmetdem";
       }
     }
   });
+
+  // Add CSS for blinking effect
+  let style = document.createElement("style");
+  style.innerHTML = `
+  @keyframes blink {
+    0% { text-decoration: underline; }
+    100% { text-decoration: none; }
+  }
+`;
+  document.head.appendChild(style);
 
   input.addEventListener("input", function () {
     let value = input.value.toLowerCase();
