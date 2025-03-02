@@ -218,6 +218,13 @@ const name = "ahmetdem";
     }
   });
 
+  const audio = new Audio("https://www.fesliyanstudios.com/play-mp3/4385");
+
+  input.addEventListener("keydown", function () {
+    audio.currentTime = 0;
+    audio.play();
+  });
+
   const table = document.getElementById("help");
 
   function exitTable() {
