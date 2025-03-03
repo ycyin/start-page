@@ -16,32 +16,18 @@ import Help from "../components/help.astro";
 <style>
   /* Base styles */
 
-  html,
-  body {
+  html, body {
     overflow: hidden; /* Disable scrollbars */
   }
 
   @keyframes gradient {
-    0% {
-      background-position: 0% 50%;
-    }
-    50% {
-      background-position: 100% 50%;
-    }
-    100% {
-      background-position: 0% 50%;
-    }
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
   }
 
   body {
-    background: linear-gradient(
-      -45deg,
-      #72bbc7,
-      #9aafb7,
-      #839fa7,
-      #a6bbb3,
-      #b9cbaf
-    );
+    background: linear-gradient(-90deg, #72bbc7, #839fa7, #6EBDCC);
     background-size: 400% 400%;
     animation: gradient 10s ease infinite;
   }
@@ -64,14 +50,15 @@ import Help from "../components/help.astro";
       padding: 1.5rem;
       gap: 1.5rem;
     }
-
+    
     .card {
       padding: 1.5rem;
       backdrop-filter: blur(4px);
     }
-
+    
     .command-line {
       padding: 0.75rem;
     }
   }
+
 </style>
