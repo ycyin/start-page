@@ -7,6 +7,8 @@ const name = "ahmetdem";
   <input id="terminal-input" type="text" />
 </section>
 
+<p id="browser-info"></p>
+
 <style>
   section {
     display: flex;
@@ -17,7 +19,7 @@ const name = "ahmetdem";
     padding: 5px;
     border-radius: var(--border-radius);
     background-color: white;
-    border: 1px solid black; /* Add this to visualize each section */
+    border: 1px solid black;
   }
 
   p {
@@ -26,7 +28,7 @@ const name = "ahmetdem";
   }
 
   #username {
-    color: rgb(0, 0, 0); /* Change this to any color you want */
+    color: rgb(0, 0, 0);
   }
 
   #browser-info {
@@ -57,69 +59,7 @@ const name = "ahmetdem";
       width: 300px;
     }
   }
-</style>
 
-<p id="browser-info"></p>
-
-<script>
-  const p = document.getElementById("browser-info");
-  const userAgent = navigator.userAgent;
-  let browser = "unknown";
-
-  if (userAgent.indexOf("Chrome") !== -1) {
-    browser = "chrome";
-  } else if (userAgent.indexOf("Firefox") !== -1) {
-    browser = "zen";
-  }
-
-  p.textContent = "ahmetdem";
-
-  const input = document.getElementById("terminal-input");
-  const examples = [
-    "how to tie a tie?",
-    "today's weather",
-    "search on reddit with r:query",
-    "search stackoverflow with s:query",
-    "make the terminal great again",
-    "hey sexy! wanna kill all humans?",
-    "press ctrl+c to clear",
-    "Bunu okuyan gaydır.",
-  ];
-
-  let exampleIndex = 0;
-  let charIndex = 0;
-  let typingSpeed = 50; // Speed of typing effect
-
-  function typePlaceholder() {
-    if (charIndex < examples[exampleIndex].length) {
-      input.placeholder += examples[exampleIndex].charAt(charIndex);
-      charIndex++;
-      setTimeout(typePlaceholder, typingSpeed);
-    } else {
-      setTimeout(() => {
-        input.placeholder = "";
-        charIndex = 0;
-        exampleIndex = (exampleIndex + 1) % examples.length;
-        typePlaceholder();
-      }, 2000);
-    }
-  }
-
-  typePlaceholder();
-
-  // Automatically focus the input when the page loads
-  input.focus();
-
-  // Focus the input when any key is pressed
-  document.addEventListener("keydown", function () {
-    input.focus();
-  });
-
-  let elements = document.querySelectorAll("a");
-
-  // Add this CSS to your stylesheet or in a style tag
-  const styleTag = document.createElement("style");
-  styleTag.textContent = `
   .bookmark-match {
     opacity: 1 !important;
     filter: brightness(1.3) !important;
@@ -139,7 +79,6 @@ const name = "ahmetdem";
     text-decoration: line-through !important;
   }
 
-  /* Ensure hover effects always take priority */
   ul li a:hover {
     background-color: var(--card-item-hover-background-color) !important;
     transform: scale(1.03) !important;
@@ -147,196 +86,206 @@ const name = "ahmetdem";
     opacity: 1 !important;
     filter: none !important;
   }
-`;
-  document.head.appendChild(styleTag);
+</style>
 
-  // Function to reset all styles
-  function resetStyles() {
-    for (let element of elements) {
-      element.classList.remove("bookmark-match");
-      element.classList.remove("bookmark-nomatch");
-      element.parentElement.classList.remove("bookmark-nomatch-parent");
+<p id="browser-info"></p>
+
+<script>
+  const name = "ahmetdem";
+
+  // Initialize browser info
+  function initializeBrowserInfo() {
+    const p = document.getElementById("browser-info");
+    const userAgent = navigator.userAgent;
+    let browser = "unknown";
+
+    if (userAgent.includes("Chrome")) {
+      browser = "chrome";
+    } else if (userAgent.includes("Firefox")) {
+      browser = "zen";
     }
+
+    p.textContent = browser;
   }
 
-  // Check input content and apply styles accordingly
-  input.addEventListener("input", function () {
-    let value = input.value.toLowerCase();
+  // Typing effect for placeholder
+  function typePlaceholder(input, examples, typingSpeed = 50) {
+    let exampleIndex = 0;
+    let charIndex = 0;
 
-    // Reset all styles if input is empty
-    if (value === "") {
-      resetStyles();
-      return;
-    }
-
-    // Process all link elements
-    for (let element of elements) {
-      let text = element.textContent.toLowerCase();
-      let isMatch = text.includes(value.replace(/^r:|^s:|^m:/, ""));
-
-      if (isMatch) {
-        // Highlight matching items
-        element.classList.add("bookmark-match");
-        element.classList.remove("bookmark-nomatch");
-        element.parentElement.classList.remove("bookmark-nomatch-parent");
+    function type() {
+      if (charIndex < examples[exampleIndex].length) {
+        input.placeholder += examples[exampleIndex].charAt(charIndex);
+        charIndex++;
+        setTimeout(type, typingSpeed);
       } else {
-        // Fade non-matching items
-        element.classList.remove("bookmark-match");
-        element.classList.add("bookmark-nomatch");
-        element.parentElement.classList.add("bookmark-nomatch-parent");
+        setTimeout(() => {
+          input.placeholder = "";
+          charIndex = 0;
+          exampleIndex = (exampleIndex + 1) % examples.length;
+          type();
+        }, 2000);
       }
     }
-  });
+
+    type();
+  }
+
+  // Reset styles for all elements
+  function resetStyles(elements) {
+    elements.forEach((element) => {
+      element.classList.remove("bookmark-match", "bookmark-nomatch");
+      element.parentElement.classList.remove("bookmark-nomatch-parent");
+    });
+  }
+
+  // Handle input events
+  function handleInput(input, elements) {
+    input.addEventListener("input", () => {
+      const value = input.value.toLowerCase();
+
+      if (value === "") {
+        resetStyles(elements);
+        return;
+      }
+
+      elements.forEach((element) => {
+        const text = element.textContent.toLowerCase();
+        const isMatch = text.includes(value.replace(/^r:|^s:|^m:/, ""));
+
+        element.classList.toggle("bookmark-match", isMatch);
+        element.classList.toggle("bookmark-nomatch", !isMatch);
+        element.parentElement.classList.toggle(
+          "bookmark-nomatch-parent",
+          !isMatch,
+        );
+      });
+    });
+  }
 
   // Handle keyboard events
-  input.addEventListener("keydown", function (event) {
-    let value = input.value.toLowerCase();
+  function handleKeyboardEvents(input, elements) {
+    const commandHistory = [];
+    let historyIndex = -1;
+
+    input.addEventListener("keydown", (event) => {
+      const value = input.value.toLowerCase();
+
+      // Ctrl+C to clear and reset
+      if (event.ctrlKey && event.key === "c") {
+        input.value = "";
+        resetStyles(elements);
+        return;
+      }
+
+      // Arrow keys for command history
+      if (event.key === "ArrowUp" && historyIndex > 0) {
+        historyIndex--;
+        input.value = commandHistory[historyIndex];
+      } else if (
+        event.key === "ArrowDown" &&
+        historyIndex < commandHistory.length - 1
+      ) {
+        historyIndex++;
+        input.value = commandHistory[historyIndex];
+      } else if (event.key === "Enter") {
+        handleEnterKey(value, elements, commandHistory);
+        historyIndex = commandHistory.length;
+      }
+    });
+  }
+
+  // Handle Enter key press
+  function handleEnterKey(value, elements, commandHistory) {
     let matchFound = false;
 
-    // Ctrl+C to clear and reset
-    if (event.ctrlKey && event.key === "c") {
-      input.value = "";
-      resetStyles();
-      return;
-    }
-
-    // Only process further if Enter is pressed
-    if (event.key !== "Enter") return;
-
-    // Find matching link
-    for (let element of elements) {
-      if (value === "") continue;
+    elements.forEach((element) => {
+      if (value === "") return;
 
       if (
         element.textContent
           .toLowerCase()
-          .indexOf(value.replace(/^r:|^s:|^m:/, "")) !== -1
+          .includes(value.replace(/^r:|^s:|^m:/, ""))
       ) {
         window.location.href = element.href;
         matchFound = true;
-        break;
       }
-    }
+    });
 
-    // Handle special commands and search
     if (!matchFound) {
-      if (value === "help") {
-        document.getElementById("help").style.display = "block";
-        document.getElementById("overlay").classList.add("active");
-      } else if (value.startsWith("r:")) {
-        window.location.href =
-          "https://google.com/search?q=site:reddit.com " +
-          value.replace("r:", "");
-      } else if (value.startsWith("s:")) {
-        window.location.href =
-          "https://google.com/search?q=site:stackoverflow.com " +
-          value.replace("s:", "");
-      } else if (value.startsWith("m:")) {
-        window.location.href =
-          "https://google.com/search?q=site:myanimelist.net " +
-          value.replace("m:", "");
-      } else if (value.startsWith("gay hakan")) {
-        window.location.href = "https://myanimelist.net/profile/Asteria";
-      } else if (value.startsWith("gay alperen")) {
-        window.location.href = "https://www.linkedin.com/in/tevfik-alperen-g%C3%B6k-a84124256/";
-      } else if (value.startsWith("ryan gosling")) {
-        window.location.href = "https://www.linkedin.com/in/nihat-eren-%C3%B6-3ba988257/";
-      }else {
-        let words = value.split(".");
-        if (words.length >= 2) {
-          window.location.href = "http://" + value;
-        } else {
-          window.location.href = "https://google.com/search?q=" + value;
-        }
-      }
+      handleSpecialCommands(value);
     }
-  });
 
-  // Make sure to reset styles when the input is cleared or focus is lost
-  input.addEventListener("blur", function () {
-    if (input.value === "") {
-      resetStyles();
-    }
-  });
-
-  // Additional handler for when the page loads
-  document.addEventListener("DOMContentLoaded", function () {
-    resetStyles();
-  });
-
-  input.addEventListener("input", function () {
-    let value = input.value.toLowerCase();
-    let elements = document.querySelectorAll("a");
-    for (let i = 0; i < elements.length; i++) {
-      let element = elements[i];
-      if (value === "") {
-        element.style.mixBlendMode = "";
-      } else if (
-        element.textContent
-          .toLowerCase()
-          .indexOf(value.replace(/^r:|^s:/, "")) !== -1
-      ) {
-        element.style.mixBlendMode = "";
-      } else {
-        element.style.mixBlendMode = "color-burn";
-      }
-    }
-  });
-
-  let commandHistory = [];
-  let historyIndex = -1;
-
-  input.addEventListener("keydown", function (event) {
-    if (event.key === "ArrowUp") {
-      if (historyIndex > 0) {
-        historyIndex--;
-        input.value = commandHistory[historyIndex];
-      }
-      event.preventDefault();
-    } else if (event.key === "ArrowDown") {
-      if (historyIndex < commandHistory.length - 1) {
-        historyIndex++;
-        input.value = commandHistory[historyIndex];
-      } else {
-        input.value = "";
-        historyIndex = commandHistory.length;
-        resetStyles();
-      }
-      event.preventDefault();
-    } else if (event.key === "Enter") {
-      let command = input.value.trim();
-      if (command !== "") {
-        commandHistory.push(command);
-        historyIndex = commandHistory.length;
-      }
-    }
-  });
-
-  const table = document.getElementById("help");
-
-  function exitTable() {
-    table.style.display = "none";
-    document.getElementById("overlay").classList.remove("active");
-    const input = document.getElementById("terminal-input");
-    input.value = "";
-    input.focus(); // Re-focus the input after closing the help table
-
-    const elements = document.querySelectorAll("a");
-    for (let i = 0; i < elements.length; i++) {
-      let element = elements[i];
-      element.style.mixBlendMode = "";
+    if (value.trim() !== "") {
+      commandHistory.push(value.trim());
     }
   }
 
-  document.addEventListener("keydown", function (event) {
-    if (event.keyCode === 27) {
-      exitTable();
+  // Handle special commands
+  async function handleSpecialCommands(value) {
+    if (value.startsWith("r:")) {
+      window.location.href = `https://google.com/search?q=site:reddit.com ${value.replace("r:", "")}`;
+    } else if (value.startsWith("m:")) {
+      window.location.href = `https://google.com/search?q=site:myanimelist.net ${value.replace("m:", "")}`;
+    } else if (value.startsWith("a:")) {
+      const query = value.replace("a:", "").trim();
+      try {
+        // Get search results AND AI recommendation
+        const res = await fetch(
+          `/api/aiSearch?q=${encodeURIComponent(query)}&results=true`,
+        );
+        if (!res.ok) throw new Error(`Server error: ${res.status}`);
+        const data = await res.json();
+
+        if (data.result && data.result.startsWith("http")) {
+          // Directly go to the AI's chosen URL
+          window.location.href = data.result;
+        } else {
+          // Fallback to Google search with AI's suggestion
+          window.location.href = `https://google.com/search?q=${encodeURIComponent(data.result || query)}`;
+        }
+      } catch (error) {
+        console.error("Error fetching AI result:", error);
+        alert("AI search failed!");
+      }
+    } else {
+      const words = value.split(".");
+      if (words.length >= 2) {
+        window.location.href = `http://${value}`;
+      } else {
+        window.location.href = `https://google.com/search?q=${value}`;
+      }
     }
-  });
+  }
 
-  const closeTableButton = document.getElementById("closeTable");
+  // Initialize the terminal
+  function initializeTerminal() {
+    const input = document.getElementById("terminal-input");
+    const examples = [
+      "how to tie a tie?",
+      "today's weather",
+      "search on reddit with r:query",
+      "search stackoverflow with s:query",
+      "make the terminal great again",
+      "hey sexy! wanna kill all humans?",
+      "press ctrl+c to clear",
+      "Bunu okuyan gaydır.",
+    ];
 
-  closeTableButton.onclick = function () {
-    exitTable();
-  };
+    const elements = document.querySelectorAll("a");
+
+    initializeBrowserInfo();
+    typePlaceholder(input, examples);
+    handleInput(input, elements);
+    handleKeyboardEvents(input, elements);
+
+    // Automatically focus the input when the page loads
+    input.focus();
+
+    // Focus the input when any key is pressed
+    document.addEventListener("keydown", () => input.focus());
+  }
+
+  // Run the terminal initialization
+  document.addEventListener("DOMContentLoaded", initializeTerminal);
 </script>
