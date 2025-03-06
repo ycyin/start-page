@@ -55,28 +55,6 @@ const name = "ahmetdem";
       flex-direction: column;
       align-items: flex-start;
     }
-    #terminal-input {
-      width: 300px;
-    }
-  }
-
-  .bookmark-match {
-    opacity: 1 !important;
-    filter: brightness(1.3) !important;
-    transform: scale(1.05) !important;
-    transition: all 0.3s ease !important;
-    box-shadow: 0 0 8px rgba(0, 0, 0, 0.8) !important;
-  }
-
-  .bookmark-nomatch {
-    opacity: 0.3 !important;
-    filter: grayscale(80%) !important;
-    transform: scale(0.95) !important;
-    transition: all 0.3s ease !important;
-  }
-
-  .bookmark-nomatch-parent {
-    text-decoration: line-through !important;
   }
 
   ul li a:hover {
@@ -131,11 +109,44 @@ const name = "ahmetdem";
     type();
   }
 
+  const styleTag = document.createElement("style");
+  styleTag.textContent = `
+  .bookmark-match {
+    opacity: 1 !important;
+    filter: brightness(1.3) !important;
+    transform: scale(1.02) !important;
+    transition: all 0.2s ease !important;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.8) !important;
+  }
+
+  .bookmark-nomatch {
+    opacity: 0.3 !important;
+    filter: grayscale(80%) !important;
+    transform: scale(0.97) !important;
+    transition: all 0.3s ease !important;
+  }
+
+  .bookmark-nomatch-parent {
+    text-decoration: line-through !important;
+  }
+
+  /* Ensure hover effects always take priority */
+  ul li a:hover {
+    background-color: var(--card-item-hover-background-color) !important;
+    transform: scale(1.03) !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2) !important;
+    opacity: 1 !important;
+    filter: none !important;
+  }
+`;
+  document.head.appendChild(styleTag);
+
   // Reset styles for all elements
   function resetStyles(elements) {
     elements.forEach((element) => {
       element.classList.remove("bookmark-match", "bookmark-nomatch");
       element.parentElement.classList.remove("bookmark-nomatch-parent");
+      element.style.mixBlendMode = ""; // Reset mixBlendMode
     });
   }
 
@@ -159,7 +170,23 @@ const name = "ahmetdem";
           "bookmark-nomatch-parent",
           !isMatch,
         );
+
+        // Set mixBlendMode based on match
+        if (value === "") {
+          element.style.mixBlendMode = "";
+        } else if (isMatch) {
+          element.style.mixBlendMode = "";
+        } else {
+          element.style.mixBlendMode = "color-burn";
+        }
       });
+    });
+
+    // Reset styles when input is cleared or focus is lost
+    input.addEventListener("blur", function () {
+      if (input.value === "") {
+        resetStyles(elements);
+      }
     });
   }
 
@@ -278,12 +305,18 @@ const name = "ahmetdem";
     typePlaceholder(input, examples);
     handleInput(input, elements);
     handleKeyboardEvents(input, elements);
+    resetStyles(elements);
 
     // Automatically focus the input when the page loads
     input.focus();
 
     // Focus the input when any key is pressed
     document.addEventListener("keydown", () => input.focus());
+
+    // Reset styles when the page loads
+    document.addEventListener("DOMContentLoaded", function () {
+      resetStyles(elements);
+    });
   }
 
   // Run the terminal initialization

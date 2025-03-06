@@ -15,10 +15,6 @@ import CommandLine from "../components/commandLine.astro";
   /* Base styles */
 
   html,
-  body {
-    overflow: hidden; /* Disable scrollbars */
-  }
-
   @keyframes gradient {
     0% {
       background-position: 0% 50%;
@@ -32,9 +28,8 @@ import CommandLine from "../components/commandLine.astro";
   }
 
   body {
-    background: linear-gradient(0deg, #006875, #839fa7, #6ebdcc);
+    overflow: hidden;
     background-size: 400% 400%;
-    animation: gradient 10s ease infinite;
   }
 
   .content {
