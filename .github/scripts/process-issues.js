@@ -1,4 +1,4 @@
-const fs = require('fs');
+import fs from 'fs';
 
 // 读取 issues.json 文件
 const issuesData = JSON.parse(fs.readFileSync('issues.json', 'utf8'));
