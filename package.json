@@ -11,8 +11,13 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/react": "^4.2.4",
     "@astrojs/vercel": "^8.1.1",
     "@google/generative-ai": "^0.23.0",
-    "astro": "^5.4.2"
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  },
+  "devDependencies": {
+    "astro": "^5.7.3"
   }
 }

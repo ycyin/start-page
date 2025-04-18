@@ -1,6 +1,6 @@
-## Terminal-like Web Interface
+## Browser Start Page + GitHub Issues Bookmark Manager
 
-A beatiful and aesthetic start page for your browser that i made for myself based on this [aesthetic-startpage](https://github.com/stefan-yas/aesthetic-startpage). 
+A beautiful and practical browser start page based on [aesthetic-startpage](https://github.com/stefan-yas/aesthetic-startpage), with added GitHub Issues bookmark management functionality.
 
 https://github.com/user-attachments/assets/5b2821f3-ddb9-4e37-92c9-7e6d2abc6ab1
 
@@ -27,7 +27,41 @@ https://github.com/user-attachments/assets/5b2821f3-ddb9-4e37-92c9-7e6d2abc6ab1
 - **Autofocus**: Automatically focuses the input field when the page loads.
 - **Keydown Event**: Focuses the input field when any key is pressed.
 
-## Deployment
-Just Fork this repository and deploy it via a site like vercel.
+### GitHub Issues Bookmark Management
+- **Issue-based bookmark storage**: Use GitHub Issues as a bookmark database, no need to maintain an additional database
+- **Rich metadata**: Support for title, description, tags, thumbnails and other metadata
+- **Powerful search and filtering**: Support for full-text search and tag filtering
+- **Responsive design**: Adapts to various device sizes
+- **Automatic synchronization**: Changes on GitHub automatically sync to the website
 
-**DO NOT FORGET TO ADD ENVIROMENT VARIABLES GEMINI_API_KEY, GOOGLE_SEARCH_API_KEY, GOOGLE_SEARCH_ENGINE_ID** 
+## Usage
+
+### Adding New Bookmarks
+1. Create a new Issue in the GitHub repository
+2. Use the provided bookmark template to fill in information
+3. After submitting the Issue, the website will automatically update to display the new bookmark
+
+### Searching and Filtering Bookmarks
+- Use the search box to search titles and descriptions
+- Click on tags to filter related bookmarks
+- Click "Clear Filters" to reset all filter conditions
+
+## Deployment Instructions
+1. Fork this repository
+2. Deploy via Vercel or similar service
+3. Set the following environment variables:
+   - `GITHUB_OWNER`: GitHub username
+   - `GITHUB_REPO`: Repository name
+   - `GITHUB_TOKEN`: GitHub access token (optional, for private repositories or higher API limits)
+   - `GEMINI_API_KEY`, `GOOGLE_SEARCH_API_KEY`, `GOOGLE_SEARCH_ENGINE_ID`: Required for AI search functionality
+
+## Local Development
+```bash
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+```
+
+Visit http://localhost:4321/github to view the bookmarks page

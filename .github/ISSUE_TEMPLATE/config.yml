@@ -1,0 +1,8 @@
+name: 书签模板配置
+description: GitHub Issues 书签模板配置
+
+blank_issues_enabled: false
+contact_links:
+  - name: 使用书签模板添加网址
+    url: https://github.com/ycyin/start-page/issues/new?template=bookmark.md
+    about: 使用此模板添加新的网址书签到您的收藏中
