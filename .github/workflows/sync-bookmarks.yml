@@ -1,0 +1,83 @@
+name: Sync GitHub Issues to Bookmarks
+
+on:
+  # 当有新 issue 创建或更新时触发
+  issues:
+    types: [opened, edited, deleted, labeled, unlabeled, closed, reopened]
+  # 每天定时执行一次
+  schedule:
+    - cron: '0 0 * * *'  # 每天 UTC 时间 0:00 运行
+  # 允许手动触发
+  workflow_dispatch:
+
+jobs:
+  sync-bookmarks:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: read
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      
+      - name: Fetch GitHub Issues
+        run: |
+          # 创建目标目录
+          mkdir -p public/data
+          mkdir -p temp_issues
+          
+          # 获取所有 issues，处理分页
+          page=1
+          total_issues=0
+          
+          echo "[]" > temp_issues/all_issues.json
+          
+          while true; do
+            echo "Fetching page $page of issues..."
+            
+            # 获取当前页的 issues
+            curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+              "https://api.github.com/repos/${{ github.repository }}/issues?state=open&per_page=100&page=$page" \
+              > temp_issues/page_$page.json
+            
+            # 检查当前页的 issues 数量
+            count=$(jq '. | length' temp_issues/page_$page.json)
+            
+            if [ "$count" -eq "0" ]; then
+              echo "No more issues found."
+              break
+            fi
+            
+            # 合并到总的 issues 文件
+            if [ "$page" -eq "1" ]; then
+              cp temp_issues/page_$page.json temp_issues/all_issues.json
+            else
+              jq -s '.[0] + .[1]' temp_issues/all_issues.json temp_issues/page_$page.json > temp_issues/merged.json
+              mv temp_issues/merged.json temp_issues/all_issues.json
+            fi
+            
+            total_issues=$((total_issues + count))
+            page=$((page + 1))
+            
+            # 避免超过 GitHub API 限制
+            sleep 1
+          done
+          
+          echo "Total issues fetched: $total_issues"
+          mv temp_issues/all_issues.json issues.json
+          
+          # 处理 issues 数据，转换为书签格式
+          node .github/scripts/process-issues.js
+        
+      - name: Commit and push if changed
+        run: |
+          git config --global user.name 'GitHub Action'
+          git config --global user.email 'action@github.com'
+          git add public/data/bookmarks.json
+          git diff --quiet && git diff --staged --quiet || (git commit -m "Update bookmarks from GitHub Issues" && git push)

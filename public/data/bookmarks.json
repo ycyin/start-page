@@ -1,0 +1,19 @@
+{
+  "bookmarks": [
+    {
+      "id": 1,
+      "number": 1,
+      "url": "https://drawnix.com",
+      "title": "drawnix",
+      "description": "一个示例书签",
+      "thumbnail": "",
+      "tags": ["示例", "bookmark"],
+      "created_at": "2025-04-18T00:00:00Z",
+      "updated_at": "2025-04-18T00:00:00Z",
+      "user": "ycyin",
+      "html_url": "https://github.com/ycyin/start-page/issues/1"
+    }
+  ],
+  "last_updated": "2025-04-18T14:00:00Z",
+  "total_count": 1
+}

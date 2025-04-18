@@ -1,5 +1,84 @@
 import React, { useState, useEffect } from 'react';
 
+// 处理 GitHub Issue 内容
+function parseMarkdown(text) {
+  if (!text) return { url: '', description: '', tags: [] };
+  
+  // 清理模板注释和标记
+  let cleanText = text
+    // 移除 HTML 注释
+    .replace(/<!--[\s\S]*?-->/g, '')
+    // 移除 Markdown 标题 (##)
+    .replace(/##\s+([^\n]+)/g, '')
+    // 移除模板指导文本
+    .replace(/请在此处填写[^\n]*/g, '')
+    .replace(/请简要描述[^\n]*/g, '')
+    .replace(/可选[^\n]*/g, '')
+    .replace(/请添加相关标签[^\n]*/g, '')
+    .trim();
+  
+  // 提取 URL
+  let url = '';
+  const urlSection = cleanText.match(/## URL[\s\S]*?(?=##|$)/);
+  if (urlSection) {
+    const urlMatch = urlSection[0].match(/https?:\/\/[^\s\n]+/);
+    if (urlMatch) url = urlMatch[0];
+  }
+  
+  // 提取描述
+  let description = '';
+  const descSection = cleanText.match(/## 描述[\s\S]*?(?=##|$)/);
+  if (descSection) {
+    const lines = descSection[0]
+      .replace(/## 描述/, '')
+      .split('\n')
+      .map(line => line.trim())
+      .filter(line => line && !line.includes('https://'));
+    
+    if (lines.length > 0) {
+      description = lines.join(' ');
+    }
+  }
+  
+  // 如果没有描述，尝试提取第一个非空内容
+  if (!description) {
+    const lines = cleanText.split('\n')
+      .map(line => line.trim())
+      .filter(line => 
+        line && 
+        !line.startsWith('##') && 
+        !line.includes('标签') && 
+        !line.includes('缩略图') && 
+        !line.includes('其他信息') &&
+        !line.includes('https://')
+      );
+    
+    if (lines.length > 0) {
+      description = lines[0];
+    }
+  }
+  
+  // 提取标签
+  let tags = [];
+  const tagSection = cleanText.match(/## 标签[\s\S]*?(?=##|$)/);
+  if (tagSection) {
+    const tagLine = tagSection[0].replace(/## 标签/, '').trim();
+    if (tagLine) {
+      tags = tagLine.split(',').map(tag => tag.trim()).filter(Boolean);
+    }
+  }
+  
+  // 如果没有找到标签部分，尝试其他方式匹配
+  if (tags.length === 0) {
+    const tagsMatch = cleanText.match(/标签[：:][\s\n]*([^\n]+)/);
+    if (tagsMatch) {
+      tags = tagsMatch[1].split(',').map(tag => tag.trim()).filter(Boolean);
+    }
+  }
+  
+  return { url, description, tags };
+}
+
 // 书签类型定义
 const BookmarksList = () => {
   const [bookmarks, setBookmarks] = useState([]);
@@ -11,39 +90,83 @@ const BookmarksList = () => {
 
   // 加载数据
   useEffect(() => {
-    fetch('/api/github-issues')
-      .then((res) => res.json())
-      .then((data) => {
-        setBookmarks(data.bookmarks || []);
+    const loadBookmarks = async () => {
+      try {
+        // 首先尝试从静态 JSON 文件加载数据
+        const staticDataResponse = await fetch('/data/bookmarks.json');
         
-        // 提取所有标签
-        const tags = new Set();
-        data.bookmarks?.forEach(bookmark => {
-          bookmark.labels?.forEach(label => tags.add(label));
-        });
-        setAllTags(Array.from(tags));
+        if (staticDataResponse.ok) {
+          const data = await staticDataResponse.json();
+          const lastUpdated = new Date(data.last_updated);
+          const now = new Date();
+          const hoursSinceUpdate = (now - lastUpdated) / (1000 * 60 * 60);
+          
+          // 如果静态数据存在且不超过 24 小时，使用静态数据
+          if (data.bookmarks?.length > 0 && hoursSinceUpdate < 24) {
+            console.log('Using static bookmarks data');
+            processBookmarks(data.bookmarks);
+            return;
+          }
+        }
         
-        setLoading(false);
-      })
-      .catch((err) => {
+        // 如果静态数据不可用或已过期，则调用 API
+        console.log('Static data unavailable or outdated, fetching from API');
+        const apiResponse = await fetch('/api/github-issues');
+        if (!apiResponse.ok) throw new Error('API request failed');
+        
+        const apiData = await apiResponse.json();
+        processBookmarks(apiData.bookmarks || []);
+      } catch (err) {
         console.error('Error loading bookmarks:', err);
         setError('加载书签失败，请稍后重试');
         setLoading(false);
+      }
+    };
+    
+    // 处理书签数据
+    const processBookmarks = (bookmarksData) => {
+      setBookmarks(bookmarksData);
+      
+      // 提取所有标签
+      const tags = new Set();
+      bookmarksData.forEach(bookmark => {
+        // 合并 labels 和 parsedTags
+        const allTags = [...(bookmark.labels || []), ...(bookmark.tags || [])];
+        allTags.forEach(tag => tags.add(tag));
       });
+      setAllTags(Array.from(tags));
+      
+      setLoading(false);
+    };
+    
+    loadBookmarks();
   }, []);
 
+  // 处理和过滤书签
+  const processedBookmarks = bookmarks.map(bookmark => {
+    const parsed = parseMarkdown(bookmark.body || '');
+    return {
+      ...bookmark,
+      parsedBody: parsed.description || bookmark.body || '',
+      parsedUrl: parsed.url || bookmark.url,
+      parsedTags: parsed.tags.length > 0 ? parsed.tags : bookmark.labels || []
+    };
+  });
+  
   // 过滤书签
-  const filteredBookmarks = bookmarks.filter(bookmark => {
+  const filteredBookmarks = processedBookmarks.filter(bookmark => {
     // 搜索过滤
     const matchesSearch = 
       search === '' || 
       bookmark.title?.toLowerCase().includes(search.toLowerCase()) || 
-      bookmark.body?.toLowerCase().includes(search.toLowerCase());
+      bookmark.parsedBody?.toLowerCase().includes(search.toLowerCase());
     
     // 标签过滤
     const matchesTags = 
       selectedTags.length === 0 || 
-      selectedTags.some(tag => bookmark.labels?.includes(tag));
+      selectedTags.some(tag => 
+        bookmark.labels?.includes(tag) || bookmark.parsedTags?.includes(tag)
+      );
     
     return matchesSearch && matchesTags;
   });
@@ -115,21 +238,21 @@ const BookmarksList = () => {
               {filteredBookmarks.map(bookmark => (
                 <li key={bookmark.id} className="bookmark-item">
                   <a 
-                    href={bookmark.title.startsWith('http') ? bookmark.title : bookmark.url} 
+                    href={bookmark.parsedUrl || (bookmark.title.startsWith('http') ? bookmark.title : bookmark.url)} 
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="bookmark-link"
                   >
-                    <h3 className="bookmark-title">{bookmark.title}</h3>
+                    <h3 className="bookmark-title">{bookmark.title.replace(/^\[书签\]\s*/, '')}</h3>
                   </a>
                   
-                  {bookmark.body && (
-                    <div className="bookmark-description">{bookmark.body}</div>
+                  {bookmark.parsedBody && (
+                    <div className="bookmark-description">{bookmark.parsedBody}</div>
                   )}
                   
-                  {bookmark.labels?.length > 0 && (
+                  {(bookmark.parsedTags?.length > 0 || bookmark.labels?.length > 0) && (
                     <div className="bookmark-tags">
-                      {bookmark.labels.map(label => (
+                      {[...new Set([...(bookmark.labels || []), ...(bookmark.parsedTags || [])])].map(label => (
                         <span 
                           key={`${bookmark.id}-${label}`} 
                           className="bookmark-tag"
