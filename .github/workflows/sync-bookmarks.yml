@@ -42,7 +42,7 @@ jobs:
             echo "Fetching page $page of issues..."
             
             # 获取当前页的 issues
-            curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            curl -s -H "Authorization: token ${{ secrets.ACCESS_TOKEN }}" \
               "https://api.github.com/repos/${{ github.repository }}/issues?state=open&per_page=100&page=$page" \
               > temp_issues/page_$page.json
             
