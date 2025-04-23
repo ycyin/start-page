@@ -34,6 +34,10 @@ export const GET: APIRoute = async () => {
           ...(issue.labels || []).map((l: any) => l.name),
           ...(parsed.tags || [])
         ],
+        // 添加 milestone 信息用于分类
+        category: issue.milestone ? issue.milestone.title : '未分类',
+        milestone_id: issue.milestone ? issue.milestone.id : null,
+        milestone_description: issue.milestone ? issue.milestone.description : '',
         created_at: issue.created_at,
         user: issue.user?.login,
       };
