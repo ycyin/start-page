@@ -1,83 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 // 处理 GitHub Issue 内容
-function parseMarkdown(text) {
-  if (!text) return { url: '', description: '', tags: [] };
-  
-  // 清理模板注释和标记
-  let cleanText = text
-    // 移除 HTML 注释
-    .replace(/<!--[\s\S]*?-->/g, '')
-    // 移除 Markdown 标题 (##)
-    .replace(/##\s+([^\n]+)/g, '')
-    // 移除模板指导文本
-    .replace(/请在此处填写[^\n]*/g, '')
-    .replace(/请简要描述[^\n]*/g, '')
-    .replace(/可选[^\n]*/g, '')
-    .replace(/请添加相关标签[^\n]*/g, '')
-    .trim();
-  
-  // 提取 URL
-  let url = '';
-  const urlSection = cleanText.match(/## URL[\s\S]*?(?=##|$)/);
-  if (urlSection) {
-    const urlMatch = urlSection[0].match(/https?:\/\/[^\s\n]+/);
-    if (urlMatch) url = urlMatch[0];
-  }
-  
-  // 提取描述
-  let description = '';
-  const descSection = cleanText.match(/## 描述[\s\S]*?(?=##|$)/);
-  if (descSection) {
-    const lines = descSection[0]
-      .replace(/## 描述/, '')
-      .split('\n')
-      .map(line => line.trim())
-      .filter(line => line && !line.includes('https://'));
-    
-    if (lines.length > 0) {
-      description = lines.join(' ');
-    }
-  }
-  
-  // 如果没有描述，尝试提取第一个非空内容
-  if (!description) {
-    const lines = cleanText.split('\n')
-      .map(line => line.trim())
-      .filter(line => 
-        line && 
-        !line.startsWith('##') && 
-        !line.includes('标签') && 
-        !line.includes('缩略图') && 
-        !line.includes('其他信息') &&
-        !line.includes('https://')
-      );
-    
-    if (lines.length > 0) {
-      description = lines[0];
-    }
-  }
-  
-  // 提取标签
-  let tags = [];
-  const tagSection = cleanText.match(/## 标签[\s\S]*?(?=##|$)/);
-  if (tagSection) {
-    const tagLine = tagSection[0].replace(/## 标签/, '').trim();
-    if (tagLine) {
-      tags = tagLine.split(',').map(tag => tag.trim()).filter(Boolean);
-    }
-  }
-  
-  // 如果没有找到标签部分，尝试其他方式匹配
-  if (tags.length === 0) {
-    const tagsMatch = cleanText.match(/标签[：:][\s\n]*([^\n]+)/);
-    if (tagsMatch) {
-      tags = tagsMatch[1].split(',').map(tag => tag.trim()).filter(Boolean);
-    }
-  }
-  
-  return { url, description, tags };
-}
+import { parseMarkdown } from '../utils/parseMarkdown';
 
 // 书签类型定义
 const BookmarksList = () => {
@@ -115,6 +39,7 @@ const BookmarksList = () => {
         if (!apiResponse.ok) throw new Error('API request failed');
         
         const apiData = await apiResponse.json();
+        console.log(apiData);
         processBookmarks(apiData.bookmarks || []);
       } catch (err) {
         console.error('Error loading bookmarks:', err);
@@ -146,10 +71,7 @@ const BookmarksList = () => {
   const processedBookmarks = bookmarks.map(bookmark => {
     const parsed = parseMarkdown(bookmark.body || '');
     return {
-      ...bookmark,
-      parsedBody: parsed.description || bookmark.body || '',
-      parsedUrl: parsed.url || bookmark.url,
-      parsedTags: parsed.tags.length > 0 ? parsed.tags : bookmark.labels || []
+      ...bookmark
     };
   });
   
@@ -159,14 +81,12 @@ const BookmarksList = () => {
     const matchesSearch = 
       search === '' || 
       bookmark.title?.toLowerCase().includes(search.toLowerCase()) || 
-      bookmark.parsedBody?.toLowerCase().includes(search.toLowerCase());
+      bookmark.description?.toLowerCase().includes(search.toLowerCase());
     
     // 标签过滤
     const matchesTags = 
       selectedTags.length === 0 || 
-      selectedTags.some(tag => 
-        bookmark.labels?.includes(tag) || bookmark.parsedTags?.includes(tag)
-      );
+      selectedTags.some(tag => bookmark.tags?.includes(tag));
     
     return matchesSearch && matchesTags;
   });
@@ -238,7 +158,7 @@ const BookmarksList = () => {
               {filteredBookmarks.map(bookmark => (
                 <li key={bookmark.id} className="bookmark-item">
                   <a 
-                    href={bookmark.parsedUrl || (bookmark.title.startsWith('http') ? bookmark.title : bookmark.url)} 
+                    href={bookmark.url || (bookmark.title.startsWith('http') ? bookmark.title : bookmark.url)} 
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="bookmark-link"
@@ -246,13 +166,13 @@ const BookmarksList = () => {
                     <h3 className="bookmark-title">{bookmark.title.replace(/^\[书签\]\s*/, '')}</h3>
                   </a>
                   
-                  {bookmark.parsedBody && (
-                    <div className="bookmark-description">{bookmark.parsedBody}</div>
+                  {bookmark.description && (
+                    <div className="bookmark-description">{bookmark.description}</div>
                   )}
                   
-                  {(bookmark.parsedTags?.length > 0 || bookmark.labels?.length > 0) && (
+                  {(bookmark.tags?.length > 0 || bookmark.labels?.length > 0) && (
                     <div className="bookmark-tags">
-                      {[...new Set([...(bookmark.labels || []), ...(bookmark.parsedTags || [])])].map(label => (
+                      {[...new Set([...(bookmark.labels || []), ...(bookmark.tags || [])])].map(label => (
                         <span 
                           key={`${bookmark.id}-${label}`} 
                           className="bookmark-tag"

@@ -19,15 +19,25 @@ export const GET: APIRoute = async () => {
     }
     const issues = await resp.json();
     // 只保留必要字段
-    const bookmarks = issues.map((issue: any) => ({
-      id: issue.id,
-      url: issue.html_url,
-      title: issue.title,
-      body: issue.body,
-      labels: issue.labels.map((l: any) => l.name),
-      created_at: issue.created_at,
-      user: issue.user?.login,
-    }));
+    // 统一用 parseMarkdown 处理
+    // @ts-ignore
+    const { parseMarkdown } = await import('../../utils/parseMarkdown.js');
+    const bookmarks = issues.map((issue: any) => {
+      const parsed = parseMarkdown(issue.body || '');
+      return {
+        id: issue.id,
+        url: parsed.url || issue.html_url,
+        title: issue.title,
+        description: parsed.description || '',
+        thumbnail: parsed.thumbnail || '',
+        tags: [
+          ...(issue.labels || []).map((l: any) => l.name),
+          ...(parsed.tags || [])
+        ],
+        created_at: issue.created_at,
+        user: issue.user?.login,
+      };
+    });
     return new Response(JSON.stringify({ bookmarks }), {
       headers: { "Content-Type": "application/json" },
     });
