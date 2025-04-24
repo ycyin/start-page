@@ -153,312 +153,170 @@ const BookmarksList = () => {
   };
 
   return (
-    <div className="bookmarks-container">
-      <div className="search-container">
-        <input 
-          type="text" 
-          placeholder="搜索书签..." 
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="search-input"
-        />
-        
-        {(selectedTags.length > 0 || selectedCategory !== 'all' || search) && (
-          <button onClick={clearFilters} className="clear-filters-btn">
-            清除筛选
-          </button>
-        )}
+    <div className="bookmarks-dashboard">
+      <div className="toolbar">
+        <nav className="category-nav">
+          {categories.map(cat => (
+            <a
+              key={cat}
+              href={`#category-${cat}`}
+              className={selectedCategory === cat ? 'active' : ''}
+              onClick={() => selectCategory(cat)}
+            >
+              {cat}
+            </a>
+          ))}
+        </nav>
+        <div className="filter-search">
+          <select
+            multiple
+            className="tags-select"
+            value={selectedTags}
+            onChange={e => setSelectedTags(Array.from(e.target.selectedOptions).map(o => o.value))}
+          >
+            {allTags.map(tag => (
+              <option key={tag} value={tag}>{tag}</option>
+            ))}
+          </select>
+          <input
+            type="text"
+            className="search-box"
+            placeholder="Search bookmarks..."
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+          />
+        </div>
+      </div>
+      <div className="content">
+        {categories.filter(c => c !== 'all').map(cat => {
+          const items = bookmarksByCategory[cat] || [];
+          return (
+            <section id={`category-${cat}`} key={cat} className="category-section">
+              <h2>{cat}</h2>
+              <div className="cards-grid">
+                {items.map(b => (
+                  <BookmarkItem key={b.id} bookmark={b} toggleTag={toggleTag} />
+                ))}
+              </div>
+            </section>
+          );
+        })}
       </div>
       
-      {/* 分类导航 */}
-      {categories.length > 1 && (
-        <div className="categories-container">
-          <div className="categories-list">
-            {categories.map(category => (
-              <span 
-                key={category} 
-                className={`category ${selectedCategory === category ? 'selected' : ''}`}
-                onClick={() => selectCategory(category)}
-              >
-                {category === 'all' ? '全部' : category}
-              </span>
-            ))}
-          </div>
-        </div>
-      )}
-      
-      {/* 标签筛选 */}
-      {allTags.length > 0 && (
-        <div className="tags-container">
-          <div className="tags-list">
-            {allTags.map(tag => (
-              <span 
-                key={tag} 
-                className={`tag ${selectedTags.includes(tag) ? 'selected' : ''}`}
-                onClick={() => toggleTag(tag)}
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
-        </div>
-      )}
-      
-      {loading ? (
-        <div className="loading">加载中...</div>
-      ) : error ? (
-        <div className="error">{error}</div>
-      ) : (
-        <>
-          <div className="bookmarks-count">
-            显示 {filteredBookmarks.length} 个书签 (共 {bookmarks.length} 个)
-          </div>
-          
-          {filteredBookmarks.length === 0 ? (
-            <div className="no-results">没有匹配的书签</div>
-          ) : (
-            <div className="bookmarks-by-category">
-              {/* 如果选择了特定分类，只显示该分类 */}
-              {selectedCategory !== 'all' ? (
-                <div className="category-section" key={selectedCategory}>
-                  <h2 className="category-title">{selectedCategory}</h2>
-                  <ul className="bookmarks-grid">
-                    {bookmarksByCategory[selectedCategory]?.map(bookmark => (
-                      <BookmarkItem key={bookmark.id} bookmark={bookmark} toggleTag={toggleTag} />
-                    ))}
-                  </ul>
-                </div>
-              ) : (
-                /* 显示所有分类 */
-                Object.entries(bookmarksByCategory)
-                  .filter(([_, bookmarks]) => bookmarks.length > 0)
-                  .map(([category, categoryBookmarks]) => (
-                    <div className="category-section" key={category}>
-                      <h2 className="category-title">{category}</h2>
-                      <ul className="bookmarks-grid">
-                        {categoryBookmarks.map(bookmark => (
-                          <BookmarkItem key={bookmark.id} bookmark={bookmark} toggleTag={toggleTag} />
-                        ))}
-                      </ul>
-                    </div>
-                  ))
-              )}
-            </div>
-          )}
-        </>
-      )}
-      
-      <style jsx>{`
-        .bookmarks-container {
-          width: 100%;
-          max-width: 1200px;
-          margin: 0 auto;
+      <style jsx='true'>{`
+        .bookmarks-dashboard {
+          width: calc(100%);
+          height: calc(100vh);
+          display: flex;
+          flex-direction: column;
+        }
+        .toolbar {
+          display: flex;
+          width: calc(100% - 2rem);
+          height: calc(8vh - 2rem);
           padding: 1rem;
+          justify-content: space-between;
+          align-items: center;
+          background-color: #f2f4f7;
         }
-        
-        .search-container {
+        .category-nav {
           display: flex;
-          margin-bottom: 1.5rem;
-          gap: 0.5rem;
+          gap: 1rem;
+          overflow-x: auto;
         }
-        
-        .search-input {
-          flex: 1;
-          padding: 0.75rem 1rem;
-          border: 1px solid #ddd;
-          border-radius: 8px;
-          font-size: 1rem;
-          box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
-        
-        .clear-filters-btn {
-          padding: 0.75rem 1rem;
-          background: #f0f0f0;
-          border: none;
-          border-radius: 8px;
-          cursor: pointer;
-          font-weight: 500;
-          transition: all 0.2s;
-        }
-        
-        .clear-filters-btn:hover {
-          background: #e0e0e0;
-          transform: translateY(-2px);
-        }
-        
-        /* 分类导航样式 */
-        .categories-container {
-          margin-bottom: 1.5rem;
-          border-bottom: 1px solid #eee;
-          padding-bottom: 1rem;
-        }
-        
-        .categories-list {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 0.75rem;
-        }
-        
-        .category {
+        .category-nav a {
+          color: #333;
           padding: 0.5rem 1rem;
-          background: #f8f9fa;
-          border-radius: 20px;
-          cursor: pointer;
-          font-size: 0.95rem;
-          transition: all 0.2s;
-          border: 1px solid #eee;
+          border-radius: 5px;
+          text-decoration: none;
+          white-space: nowrap;
         }
-        
-        .category:hover {
-          background: #e9ecef;
-          transform: translateY(-2px);
-        }
-        
-        .category.selected {
+        .category-nav a.active {
           background: #007bff;
-          color: white;
-          border-color: #007bff;
-          font-weight: 500;
+          color: #fff;
         }
-        
-        /* 标签筛选样式 */
-        .tags-container {
+        .filter-search {
           display: flex;
-          flex-wrap: wrap;
-          gap: 0.5rem;
-          margin-bottom: 1.5rem;
+          gap: 1rem;
           align-items: center;
         }
-        
-        .tags-list {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 0.5rem;
-        }
-        
-        .tag {
-          padding: 0.35rem 0.75rem;
-          background: #f0f0f0;
+        .tags-select {
+          padding: 0.5rem;
+          border: 1px solid #ccc;
           border-radius: 4px;
-          cursor: pointer;
-          font-size: 0.9rem;
-          transition: all 0.2s;
+          min-width: 200px;
+          height: auto;
         }
-        
-        .tag:hover {
-          background: #e0e0e0;
+        .search-box {
+          padding: 0.5rem 1rem;
+          border: 1px solid #ccc;
+          border-radius: 4px;
         }
-        
-        .tag.selected {
-          background: #28a745;
-          color: white;
+        .content {
+          width: calc(100% - 2rem);
+          height: calc(92vh - 2rem);
+          padding: 1rem;
+          overscroll-behavior: contain;
+          overflow: auto;
+          background-color: #fcfcfd;
+          flex: 1 1 0;
+          min-height: 0;
+          overflow-y: auto;
         }
-        
-        /* 分类区域样式 */
+
         .category-section {
-          margin-bottom: 2.5rem;
+          margin-bottom: 2rem;
         }
-        
-        .category-title {
-          font-size: 1.5rem;
+        .category-section h2 {
           margin-bottom: 1rem;
-          padding-bottom: 0.5rem;
-          border-bottom: 2px solid #f0f0f0;
-          color: #343a40;
+          font-size: 1.5rem;
         }
-        
-        .bookmarks-count {
-          margin-bottom: 1.5rem;
-          font-size: 0.95rem;
-          color: #6c757d;
-        }
-        
-        .loading, .error, .no-results {
-          padding: 3rem;
-          text-align: center;
-          color: #6c757d;
-          background: #f8f9fa;
-          border-radius: 8px;
-          margin: 1rem 0;
-        }
-        
-        .error {
-          color: #dc3545;
-          background: #f8d7da;
-        }
-        
-        .bookmarks-grid {
+        .cards-grid {
           display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-          gap: 1.25rem;
-          list-style: none;
-          padding: 0;
+          grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+          gap: 1.5rem;
         }
-        
-        .bookmark-item {
-          background: white;
-          border-radius: 10px;
-          box-shadow: 0 3px 10px rgba(0,0,0,0.08);
-          padding: 1.25rem;
-          transition: all 0.3s ease;
-          border: 1px solid #f0f0f0;
-        }
-        
-        .bookmark-item:hover {
-          transform: translateY(-5px);
-          box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-        
-        .bookmark-link {
-          text-decoration: none;
-          color: #007bff;
-          display: block;
-        }
-        
-        .bookmark-title {
-          margin: 0 0 0.75rem;
-          font-size: 1.25rem;
-          line-height: 1.4;
-        }
-        
-        .bookmark-description {
-          margin: 0.75rem 0;
-          color: #495057;
-          font-size: 0.95rem;
-          line-height: 1.5;
-        }
-        
-        .bookmark-tags {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 0.4rem;
-          margin: 0.75rem 0;
-        }
-        
-        .bookmark-tag {
-          font-size: 0.8rem;
-          padding: 0.2rem 0.5rem;
-          background: #e9ecef;
-          border-radius: 4px;
-          cursor: pointer;
-          transition: all 0.2s;
-        }
-        
-        .bookmark-tag:hover {
-          background: #dee2e6;
-        }
-        
-        @media (max-width: 768px) {
-          .bookmarks-grid {
-            grid-template-columns: 1fr;
-          }
-          
-          .categories-list {
-            overflow-x: auto;
-            padding-bottom: 0.5rem;
-            flex-wrap: nowrap;
-          }
-        }
+
+
+        .flex {
+    display: flex;
+}
+
+.h-8 {
+    height: 2rem;
+}
+
+.mt-3 {
+    margin-top: .75rem;
+}
+
+.mx-2 {
+    margin-left: .5rem;
+    margin-right: .5rem;
+}
+
+.line-clamp-1, .line-clamp-2 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+}
+
+.line-clamp-2 {
+    -webkit-line-clamp: 2;
+}
+
+.system-xs-regular {
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 16px;
+}
+
+.text-text-secondary {
+    color: #354052;
+}
+        .text-text-tertiary {
+    color: #676f83;
+}
       `}</style>
     </div>
   );
@@ -472,38 +330,69 @@ const BookmarkItem = ({ bookmark, toggleTag }) => {
         href={bookmark.url || (bookmark.title.startsWith('http') ? bookmark.title : bookmark.url)} 
         target="_blank" 
         rel="noopener noreferrer"
-        className="bookmark-link"
       >
-        <h3 className="bookmark-title">{bookmark.title.replace(/^\[书签\]\s*/, '')}</h3>
-      </a>
+      <h3 className="text-text-secondary">{bookmark.title.replace(/^\[书签\]\s*/, '')}</h3>
+      
       
       {bookmark.description && (
-        <div className="bookmark-description">{bookmark.description}</div>
+        <div className="line-clamp-2 system-xs-regular text-text-tertiary h-8 mt-3">{bookmark.description}</div>
       )}
-      
-      {bookmark.tags?.length > 0 && (
-        <div className="bookmark-tags">
-          {bookmark.tags.map(tag => (
-            <span 
-              key={`${bookmark.id}-${tag}`} 
-              className="bookmark-tag"
-              onClick={(e) => {
-                e.preventDefault();
-                toggleTag(tag);
-              }}
-            >
-              {tag}
-            </span>
-          ))}
+      {!bookmark.description && (
+        <div className="line-clamp-2 system-xs-regular text-text-tertiary h-8 mt-3">(暂无描述)</div>
+      )}
+      </a>
+      <a
+        href={bookmark.html_url ||bookmark.url} 
+        target="_blank" 
+        rel="noopener noreferrer"
+      >
+      <div className="flex system-xs-regular text-text-tertiary">
+    
+        <div className="flex">
+          {bookmark.user && <span className="bookmark-user">by {bookmark.user}</span>}
+          {bookmark.created_at && (
+            <span className="bookmark-date">&nbsp;@{new Date(bookmark.created_at).toLocaleDateString()}</span>
+          )}
         </div>
-      )}
-      
-      <div className="bookmark-meta">
-        {bookmark.user && <span className="bookmark-user">添加者: {bookmark.user}</span>}
-        {bookmark.created_at && (
-          <span className="bookmark-date">日期: {new Date(bookmark.created_at).toLocaleDateString()}</span>
+
+        <div class="system-xs-regular mx-2 text-text-quaternary">·</div>
+        
+
+        {bookmark.tags?.length > 0 && (
+          <div className="bookmark-tags">
+            {bookmark.tags.map(tag => (
+              <span 
+                key={`${bookmark.id}-${tag}`} 
+                className="bookmark-tag"
+                onClick={(e) => {
+                  e.preventDefault();
+                  toggleTag(tag);
+                }}
+              >
+                #{tag}&nbsp;
+              </span>
+            ))}
+          </div>
         )}
-      </div>
+     </div>
+     </a>
+
+      <style jsx='true'>{`
+        a {
+          text-decoration: none;
+        }
+        .bookmark-item {
+          list-style: none;
+          padding: 0.5rem;
+          background: #fff;
+          border-radius: .75rem;
+          box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+          transition: box-shadow 0.2s;
+        }
+        .bookmark-item:hover {
+          box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+      `}</style>
     </li>
   );
 };

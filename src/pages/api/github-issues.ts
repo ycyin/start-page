@@ -40,6 +40,7 @@ export const GET: APIRoute = async () => {
         milestone_description: issue.milestone ? issue.milestone.description : '',
         created_at: issue.created_at,
         user: issue.user?.login,
+        html_url: issue.html_url
       };
     });
     return new Response(JSON.stringify({ bookmarks }), {
