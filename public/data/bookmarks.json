@@ -1,17 +1,38 @@
 {
   "bookmarks": [
     {
+      "id": 3023756961,
+      "number": 3,
+      "url": "https://blog.dailydoseofds.com",
+      "title": "Daily Dose of Data Science",
+      "description": "Daily Dose of Data Science brings together intriguing frameworks, libraries, technologies, and tips that make the life cycle of a Data Science project effortless. Being a Data Scientist myself, I can understand that there’s a lot going on in your day-to-day work. Therefore, each post is meticulously designed so that you never spend more than a minute on a single post and can get back to your day asap. I should mention that my tips are not just limited to Data Science. These can be about general stuff related to Python Programming, Machine Learning, etc., which can be extremely useful as well.",
+      "thumbnail": "",
+      "tags": [
+        "博客"
+      ],
+      "category": "阅读",
+      "milestone_id": 12799597,
+      "milestone_description": "",
+      "created_at": "2025-04-28T05:36:33Z",
+      "updated_at": "2025-04-28T05:36:54Z",
+      "user": "ycyin",
+      "html_url": "https://github.com/ycyin/start-page/issues/3"
+    },
+    {
       "id": 3004549270,
       "number": 2,
       "url": "https://mcp.so",
       "title": "MCP.SO",
-      "description": "",
+      "description": "MCP仓库列表",
       "thumbnail": "",
       "tags": [
         "在线"
       ],
+      "category": "AIGC",
+      "milestone_id": 12774429,
+      "milestone_description": null,
       "created_at": "2025-04-18T09:27:30Z",
-      "updated_at": "2025-04-23T06:28:14Z",
+      "updated_at": "2025-05-01T05:32:36Z",
       "user": "ycyin",
       "html_url": "https://github.com/ycyin/start-page/issues/2"
     },
@@ -26,12 +47,15 @@
         "工具",
         "在线"
       ],
+      "category": "未分类",
+      "milestone_id": null,
+      "milestone_description": "",
       "created_at": "2025-04-18T05:52:15Z",
       "updated_at": "2025-04-18T08:56:35Z",
       "user": "ycyin",
       "html_url": "https://github.com/ycyin/start-page/issues/1"
     }
   ],
-  "last_updated": "2025-04-24T01:44:53.992Z",
-  "total_count": 2
+  "last_updated": "2025-05-01T06:22:49.527Z",
+  "total_count": 3
 }
