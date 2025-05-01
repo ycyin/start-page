@@ -211,7 +211,7 @@ const BookmarksList = () => {
         )}
 
         <div className="filter-search">
-          <div style={{ minWidth: 180, maxWidth: 320, flex: 1 }}>
+          <div style={{ flex: 1 }}>
   <Select
     isMulti
     options={allTags.map(tag => ({ label: tag, value: tag }))}
@@ -233,9 +233,9 @@ const BookmarksList = () => {
   variant="outlined"
   InputProps={{
     startAdornment: <SearchIcon sx={{ color: '#bbb', mr: 1 }} fontSize="small" />, // MUI v5
-    style: { borderRadius: 6, background: '#fff', minWidth: 180, maxWidth: 320 }
+    style: { borderRadius: 6, background: '#fff'}
   }}
-  sx={{ ml: 2, flex: 1, minWidth: 140, maxWidth: 320 }}
+  sx={{ ml: 2, flex: 1}}
 />
 
         </div>
@@ -283,6 +283,8 @@ const BookmarksList = () => {
   display: flex;
   gap: 1rem;
   overflow-x: auto;
+  min-width: 50%;
+  max-width: 70%;
 }
 @media (max-width: 600px) {
   .category-nav {
