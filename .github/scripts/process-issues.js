@@ -4,7 +4,7 @@ import fs from 'fs';
 const issuesData = JSON.parse(fs.readFileSync('issues.json', 'utf8'));
 
 // 统一使用 src/utils/parseMarkdown.js
-import { parseMarkdown } from '../src/utils/parseMarkdown.js';
+import parseMarkdown from '../../src/utils/parseMarkdown.js';
 
 // 转换 issues 为书签格式
 const bookmarks = issuesData
