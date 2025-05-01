@@ -241,19 +241,26 @@ const BookmarksList = () => {
         </div>
       </div>
       <div className="content">
-        {categories.filter(c => c !== 'all').map(cat => {
-          const items = bookmarksByCategory[cat] || [];
-          return (
-            <section id={`category-${cat}`} key={cat} className="category-section">
-              <h2>{cat}</h2>
-              <div className="cards-grid">
-                {items.map(b => (
-                  <BookmarkItem key={b.id} bookmark={b} toggleTag={toggleTag} />
-                ))}
-              </div>
-            </section>
-          );
-        })}
+        {
+          categories.filter(c => c !== 'all').filter(cat => (bookmarksByCategory[cat] || []).length > 0).length === 0 ? (
+            <div style={{textAlign: 'center', color: '#888', marginTop: '3rem'}}>没有符合条件的书签</div>
+          ) : (
+            categories.filter(c => c !== 'all').map(cat => {
+              const items = bookmarksByCategory[cat] || [];
+              if (items.length === 0) return null;
+              return (
+                <section id={`category-${cat}`} key={cat} className="category-section">
+                  <h2>{cat}</h2>
+                  <div className="cards-grid">
+                    {items.map(b => (
+                      <BookmarkItem key={b.id} bookmark={b} toggleTag={toggleTag} />
+                    ))}
+                  </div>
+                </section>
+              );
+            })
+          )
+        }
       </div>
       
       <style jsx='true'>{`
