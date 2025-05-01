@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from 'react';
-
+import Select from 'react-select';
+import TextField from '@mui/material/TextField';
+import SearchIcon from '@mui/icons-material/Search';
+import Drawer from '@mui/material/Drawer';
+import IconButton from '@mui/material/IconButton';
+import MenuIcon from '@mui/icons-material/Menu';
+import useMediaQuery from '@mui/material/useMediaQuery';
 // 处理 GitHub Issue 内容
 import { parseMarkdown } from '../utils/parseMarkdown';
 
@@ -152,39 +158,86 @@ const BookmarksList = () => {
     setSelectedCategory(category);
   };
 
+  const isMobile = useMediaQuery('(max-width:600px)');
+  const [drawerOpen, setDrawerOpen] = useState(false);
+
   return (
     <div className="bookmarks-dashboard">
       <div className="toolbar">
-        <nav className="category-nav">
-          {categories.map(cat => (
-            <a
-              key={cat}
-              href={`#category-${cat}`}
-              className={selectedCategory === cat ? 'active' : ''}
-              onClick={() => selectCategory(cat)}
-            >
-              {cat}
-            </a>
-          ))}
-        </nav>
-        <div className="filter-search">
-          <select
-            multiple
-            className="tags-select"
-            value={selectedTags}
-            onChange={e => setSelectedTags(Array.from(e.target.selectedOptions).map(o => o.value))}
-          >
-            {allTags.map(tag => (
-              <option key={tag} value={tag}>{tag}</option>
+        {!isMobile && (
+          <nav className="category-nav">
+            {categories.map(cat => (
+              <a
+                key={cat}
+                href={`#category-${cat}`}
+                className={selectedCategory === cat ? 'active' : ''}
+                onClick={() => selectCategory(cat)}
+              >
+                {cat}
+              </a>
             ))}
-          </select>
-          <input
-            type="text"
-            className="search-box"
-            placeholder="Search bookmarks..."
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-          />
+          </nav>
+        )}
+        {isMobile && (
+          <React.Fragment>
+            <IconButton
+              className="mobile-category-menu-btn"
+              onClick={() => setDrawerOpen(true)}
+              sx={{ position: 'fixed', bottom: 22, left: 22, zIndex: 2000, background: '#fff', boxShadow: 2 }}
+            >
+              <MenuIcon />
+            </IconButton>
+            <Drawer
+              anchor="left"
+              open={drawerOpen}
+              onClose={() => setDrawerOpen(false)}
+              PaperProps={{ sx: { width: 240, pt: 2 } }}
+            >
+              <div className="drawer-category-list">
+                {categories.map(cat => (
+                  <a
+                    key={cat}
+                    href={`#category-${cat}`}
+                    className={selectedCategory === cat ? 'active' : ''}
+                    onClick={() => { selectCategory(cat); setDrawerOpen(false); }}
+                    style={{ display: 'block', padding: '1rem 1.5rem', color: '#333', textDecoration: 'none', fontWeight: selectedCategory === cat ? 600 : 400 }}
+                  >
+                    {cat}
+                  </a>
+                ))}
+              </div>
+            </Drawer>
+          </React.Fragment>
+        )}
+
+        <div className="filter-search">
+          <div style={{ minWidth: 180, maxWidth: 320, flex: 1 }}>
+  <Select
+    isMulti
+    options={allTags.map(tag => ({ label: tag, value: tag }))}
+    value={selectedTags.map(tag => ({ label: tag, value: tag }))}
+    onChange={opts => setSelectedTags(opts ? opts.map(o => o.value) : [])}
+    placeholder="选择标签..."
+    classNamePrefix="react-select"
+    styles={{
+      control: base => ({ ...base, minHeight: 38, borderRadius: 6 }),
+      menu: base => ({ ...base, zIndex: 10 })
+    }}
+  />
+</div>
+          <TextField
+  value={search}
+  onChange={e => setSearch(e.target.value)}
+  placeholder="搜索书签..."
+  size="small"
+  variant="outlined"
+  InputProps={{
+    startAdornment: <SearchIcon sx={{ color: '#bbb', mr: 1 }} fontSize="small" />, // MUI v5
+    style: { borderRadius: 6, background: '#fff', minWidth: 180, maxWidth: 320 }
+  }}
+  sx={{ ml: 2, flex: 1, minWidth: 140, maxWidth: 320 }}
+/>
+
         </div>
       </div>
       <div className="content">
@@ -220,10 +273,37 @@ const BookmarksList = () => {
           background-color: #f2f4f7;
         }
         .category-nav {
-          display: flex;
-          gap: 1rem;
-          overflow-x: auto;
-        }
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+}
+@media (max-width: 600px) {
+  .category-nav {
+    display: none;
+  }
+}
+.drawer-category-list {
+  padding-top: 1rem;
+}
+.drawer-category-list a {
+  font-size: 1.12rem;
+  border-radius: 6px;
+  margin-bottom: 0.2rem;
+  transition: background 0.15s;
+}
+.drawer-category-list a.active, .drawer-category-list a:hover {
+  background: #e3f0ff;
+  color: #1976d2;
+}
+.mobile-category-menu-btn {
+  position: fixed !important;
+  left: 22px;
+  bottom: 22px;
+  z-index: 2000;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+}
+
         .category-nav a {
           color: #333;
           padding: 0.5rem 1rem;
@@ -236,17 +316,22 @@ const BookmarksList = () => {
           color: #fff;
         }
         .filter-search {
-          display: flex;
-          gap: 1rem;
-          align-items: center;
-        }
-        .tags-select {
-          padding: 0.5rem;
-          border: 1px solid #ccc;
-          border-radius: 4px;
-          min-width: 200px;
-          height: auto;
-        }
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  border-radius: 8px;
+  padding: 0.5rem 0.5rem;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+  min-width: 0;
+}
+.filter-search > div, .filter-search .MuiTextField-root {
+  flex: 1 1 0;
+  min-width: 0;
+  max-width: 100%;
+}
+
+        
         .search-box {
           padding: 0.5rem 1rem;
           border: 1px solid #ccc;
