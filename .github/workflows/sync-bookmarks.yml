@@ -20,6 +20,10 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+
+      - name: Debounce for opened event
+        if: github.event.action == 'opened'
+        run: sleep 30
       
       - name: Setup Node.js
         uses: actions/setup-node@v3
