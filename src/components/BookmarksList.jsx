@@ -6,6 +6,7 @@ import Drawer from '@mui/material/Drawer';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import ReactMarkdown from 'react-markdown';
 // 处理 GitHub Issue 内容
 import { parseMarkdown } from '../utils/parseMarkdown';
 
@@ -429,7 +430,7 @@ const BookmarkItem = ({ bookmark, toggleTag }) => {
       
       
       {bookmark.description && (
-        <div className="line-clamp-2 system-xs-regular text-text-tertiary h-8 mt-3">{bookmark.description}</div>
+        <div className="line-clamp-2 system-xs-regular text-text-tertiary h-8 mt-3"><ReactMarkdown>{bookmark.description}</ReactMarkdown></div>
       )}
       {!bookmark.description && (
         <div className="line-clamp-2 system-xs-regular text-text-tertiary h-8 mt-3">(暂无描述)</div>
