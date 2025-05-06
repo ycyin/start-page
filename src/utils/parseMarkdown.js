@@ -23,8 +23,7 @@ export function parseMarkdown(text) {
     const lines = descSection[0]
       .replace(/## 描述/, '')
       .split('\n')
-      .map(line => line.trim())
-      .filter(line => line && !line.includes('https://'));
+      .map(line => line.trim());
     if (lines.length > 0) {
       description = lines.join(' ');
     }
