@@ -1,6 +1,24 @@
 {
   "bookmarks": [
     {
+      "id": 3092308870,
+      "number": 8,
+      "url": "https://edu.huaweicloud.com",
+      "title": "华为云课堂",
+      "description": "  华为免费学习平台  ",
+      "thumbnail": "",
+      "tags": [
+        "在线"
+      ],
+      "category": "未分类",
+      "milestone_id": null,
+      "milestone_description": "",
+      "created_at": "2025-05-27T01:29:27Z",
+      "updated_at": "2025-05-27T01:29:57Z",
+      "user": "ycyin",
+      "html_url": "https://github.com/ycyin/start-page/issues/8"
+    },
+    {
       "id": 3089651672,
       "number": 7,
       "url": "https://zh.wikihow.com",
@@ -126,6 +144,6 @@
       "html_url": "https://github.com/ycyin/start-page/issues/1"
     }
   ],
-  "last_updated": "2025-05-26T01:52:18.703Z",
-  "total_count": 7
+  "last_updated": "2025-05-27T01:30:07.384Z",
+  "total_count": 8
 }
