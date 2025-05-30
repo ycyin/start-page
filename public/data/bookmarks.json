@@ -1,6 +1,24 @@
 {
   "bookmarks": [
     {
+      "id": 3103161969,
+      "number": 9,
+      "url": "https://pad.ws/",
+      "title": "whiteboard IDE 白板IDE",
+      "description": "  将白板与IDE完美融合，让你在浏览器中轻松绘制和编码。亮点：1. 无缝切换，快速从创意草图到代码实现；2. 支持VS Code等主流开发工具，提升开发效率；3. 云开发环境，随时随地访问 'pad.ws - whiteboard as an IDE 🎨' GitHub: github.com/pad-ws/pad.ws  ",
+      "thumbnail": "",
+      "tags": [
+        "工具"
+      ],
+      "category": "未分类",
+      "milestone_id": null,
+      "milestone_description": "",
+      "created_at": "2025-05-30T12:50:53Z",
+      "updated_at": "2025-05-30T12:50:53Z",
+      "user": "ycyin",
+      "html_url": "https://github.com/ycyin/start-page/issues/9"
+    },
+    {
       "id": 3092308870,
       "number": 8,
       "url": "https://edu.huaweicloud.com",
@@ -144,6 +162,6 @@
       "html_url": "https://github.com/ycyin/start-page/issues/1"
     }
   ],
-  "last_updated": "2025-05-30T01:47:15.682Z",
-  "total_count": 8
+  "last_updated": "2025-05-30T12:51:06.984Z",
+  "total_count": 9
 }
