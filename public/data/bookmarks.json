@@ -1,6 +1,24 @@
 {
   "bookmarks": [
     {
+      "id": 3191663248,
+      "number": 10,
+      "url": "https://portswigger.net/web-security/learning-paths",
+      "title": "portswigger网络安全",
+      "description": "  一个适合新手的网络安全学习网站  ",
+      "thumbnail": "",
+      "tags": [
+        "在线"
+      ],
+      "category": "未分类",
+      "milestone_id": null,
+      "milestone_description": "",
+      "created_at": "2025-07-01T09:42:16Z",
+      "updated_at": "2025-07-01T09:42:16Z",
+      "user": "ycyin",
+      "html_url": "https://github.com/ycyin/start-page/issues/10"
+    },
+    {
       "id": 3103161969,
       "number": 9,
       "url": "https://pad.ws/",
@@ -162,6 +180,6 @@
       "html_url": "https://github.com/ycyin/start-page/issues/1"
     }
   ],
-  "last_updated": "2025-07-01T02:04:11.083Z",
-  "total_count": 9
+  "last_updated": "2025-07-01T09:42:26.674Z",
+  "total_count": 10
 }
